@@ -20,10 +20,14 @@
      continues from its current value and velocity (interruptible).
   ------------------------------------------------------------------ */
   class Spring {
-    constructor(value = 0, { response = 0.4, damping = 1 } = {}) {
+    // restDelta / restSpeed are in the spring's own units (px for the
+    // carousel, normalised -1..1 for the tilt), so each spring sets its own.
+    constructor(value = 0, { response = 0.4, damping = 1, restDelta = 0.25, restSpeed = 0.5 } = {}) {
       this.value = value;
       this.target = value;
       this.velocity = 0;
+      this.restDelta = restDelta;
+      this.restSpeed = restSpeed;
       this.configure({ response, damping });
       this.onUpdate = null;
       this.onRest = null;
@@ -75,7 +79,7 @@
         dt -= h;
       }
       this.onUpdate?.(this.value);
-      if (Math.abs(this.velocity) < 0.5 && Math.abs(this.value - this.target) < 0.25) {
+      if (Math.abs(this.velocity) < this.restSpeed && Math.abs(this.value - this.target) < this.restDelta) {
         this.value = this.target;
         this.velocity = 0;
         this.onUpdate?.(this.value);
@@ -158,8 +162,9 @@
   const stage = document.querySelector('[data-tilt]');
   if (scope && stage) {
     const produce = [...scope.querySelectorAll('.produce')];
-    const sx = new Spring(0, { response: 0.7, damping: 1 });
-    const sy = new Spring(0, { response: 0.7, damping: 1 });
+    const tiltOpts = { response: 0.7, damping: 1, restDelta: 0.001, restSpeed: 0.002 };
+    const sx = new Spring(0, tiltOpts);
+    const sy = new Spring(0, tiltOpts);
     const render = () => {
       stage.style.setProperty('--ry', `${sx.value * 6}deg`);
       stage.style.setProperty('--rx', `${-sy.value * 5}deg`);
@@ -173,7 +178,8 @@
 
     const hero = scope.closest('.hero');
     const onMove = (e) => {
-      if (reducedMotion() || !finePointerQuery.matches) return;
+      // Mouse only: on hybrid devices a finger should never tilt the scene.
+      if (reducedMotion() || e.pointerType !== 'mouse' || !finePointerQuery.matches) return;
       const r = hero.getBoundingClientRect();
       sx.to(clamp(((e.clientX - r.left) / r.width) * 2 - 1, -1, 1));
       sy.to(clamp(((e.clientY - r.top) / r.height) * 2 - 1, -1, 1));
@@ -212,10 +218,20 @@
 
     const nearest = (x) => snaps.reduce((best, s, i) => (Math.abs(s - x) < Math.abs(snaps[best] - x) ? i : best), 0);
 
+    // aria-disabled (not `disabled`) so a keyboard user's focus is never
+    // dropped to <body> when they reach either end.
+    const setEnabled = (btn, enabled) => btn?.setAttribute('aria-disabled', String(!enabled));
+    const isEnabled = (btn) => btn?.getAttribute('aria-disabled') !== 'true';
+
     const updateUi = () => {
-      if (prev) prev.disabled = index <= 0;
-      if (next) next.disabled = index >= snaps.length - 1;
-      if (status) status.textContent = `Showing recipe ${index + 1} of ${cards.length}`;
+      const atEnd = index >= snaps.length - 1;
+      setEnabled(prev, index > 0);
+      setEnabled(next, !atEnd);
+      if (status) {
+        status.textContent = atEnd && index + 1 < cards.length
+          ? `Showing recipes ${index + 1} to ${cards.length} of ${cards.length}`
+          : `Showing recipe ${index + 1} of ${cards.length}`;
+      }
     };
 
     const goTo = (i, { velocity = 0, bounce = false } = {}) => {
@@ -226,8 +242,16 @@
       updateUi();
     };
 
-    prev?.addEventListener('click', () => goTo(index - 1));
-    next?.addEventListener('click', () => goTo(index + 1));
+    prev?.addEventListener('click', () => { if (isEnabled(prev)) goTo(index - 1); });
+    next?.addEventListener('click', () => { if (isEnabled(next)) goTo(index + 1); });
+
+    const band = (raw) => {
+      if (raw > 0) return rubberband(raw, viewport.clientWidth);
+      if (raw < min) return min + rubberband(raw - min, viewport.clientWidth);
+      return raw;
+    };
+    // Bring a mid-flight (or tapped-to-stop) track to rest on a card.
+    const settle = () => goTo(nearest(clamp(spring.value, min, 0)));
 
     viewport.addEventListener('keydown', (e) => {
       const map = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: snaps.length - 1 };
@@ -262,40 +286,41 @@
 
     viewport.addEventListener('pointermove', (e) => {
       if (!drag || e.pointerId !== drag.id) return;
+      if (e.pointerType === 'mouse' && e.buttons === 0) { endDrag(e); return; } // missed release
       const dx = e.clientX - drag.startX;
       const dy = e.clientY - drag.startY;
       if (!drag.active) {
-        if (Math.abs(dy) > SLOP && Math.abs(dy) > Math.abs(dx)) { drag = null; return; } // vertical scroll wins
+        if (Math.abs(dy) > SLOP && Math.abs(dy) > Math.abs(dx)) { drag = null; settle(); return; } // vertical scroll wins
         if (Math.abs(dx) < SLOP) return;
         drag.active = true;
         drag.startX = e.clientX; // start tracking from here so there is no jump
         viewport.setPointerCapture(e.pointerId);
         viewport.classList.add('is-dragging');
       }
-      const raw = drag.origin + (e.clientX - drag.startX);
-      let x = raw;
-      if (raw > 0) x = rubberband(raw, viewport.clientWidth);
-      else if (raw < min) x = min + rubberband(raw - min, viewport.clientWidth);
-      spring.set(x);
+      spring.set(band(drag.origin + (e.clientX - drag.startX)));
       const now = performance.now();
       drag.samples.push({ x: e.clientX, t: now });
       while (drag.samples.length > 2 && now - drag.samples[0].t > 100) drag.samples.shift();
     });
 
-    const endDrag = (e) => {
+    function endDrag(e) {
       if (!drag || e.pointerId !== drag.id) return;
       const wasActive = drag.active;
-      const s = drag.samples;
+      const now = performance.now();
+      // Only motion from the last ~100 ms counts; a pause before release means no fling.
+      const s = drag.samples.filter((p) => now - p.t <= 100);
       drag = null;
       viewport.classList.remove('is-dragging');
-      if (!wasActive) return;
+      if (!wasActive) { settle(); return; } // a tap that caught it mid-flight
       suppressClick = true;
       setTimeout(() => { suppressClick = false; }, 0);
 
-      const first = s[0];
+      let velocity = 0; // px/s
       const last = s[s.length - 1];
-      const dt = Math.max(last.t - first.t, 1);
-      const velocity = ((last.x - first.x) / dt) * 1000; // px/s
+      if (s.length >= 2 && now - last.t <= 50) {
+        const first = s[0];
+        velocity = ((last.x - first.x) / Math.max(last.t - first.t, 1)) * 1000;
+      }
 
       // Project where the flick is heading, then snap to the card nearest that.
       const projected = spring.value + project(velocity);
@@ -303,23 +328,24 @@
       // A deliberate flick always advances at least one card.
       if (i === index && Math.abs(velocity) > 400) i = index + (velocity < 0 ? 1 : -1);
       goTo(i, { velocity, bounce: Math.abs(velocity) > 600 });
-    };
-    viewport.addEventListener('pointerup', endDrag);
-    viewport.addEventListener('pointercancel', endDrag);
+    }
+    // On window, so a release anywhere (even after leaving the carousel) ends the drag.
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
     viewport.addEventListener('click', (e) => { if (suppressClick) { e.stopPropagation(); e.preventDefault(); } }, true);
 
     /* Trackpad horizontal scrolling. */
     let wheelTimer = 0;
+    let wheelRaw = null; // un-banded offset for the current wheel gesture
     viewport.addEventListener('wheel', (e) => {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
-      spring.stop();
-      let x = spring.value - e.deltaX;
-      if (x > 0) x = rubberband(x, viewport.clientWidth) ;
-      else if (x < min) x = min + rubberband(x - min, viewport.clientWidth);
-      spring.set(x);
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? viewport.clientWidth : 1;
+      if (wheelRaw === null) { spring.stop(); wheelRaw = spring.value; }
+      wheelRaw -= e.deltaX * unit;
+      spring.set(band(wheelRaw));
       clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => goTo(nearest(clamp(spring.value, min, 0))), 120);
+      wheelTimer = setTimeout(() => { wheelRaw = null; settle(); }, 120);
     }, { passive: false });
 
     /* Heart toggle: state + a small pop on the causal event only. */

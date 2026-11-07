@@ -197,7 +197,7 @@ h1, h2, h3, p { margin: 0; }
   transition: transform 100ms ease-out, opacity 200ms ease, background-color 200ms ease;
 }
 .round-btn:hover { background: var(--surface-2); }
-.round-btn[disabled] { opacity: 0.35; cursor: default; transform: none; }
+.round-btn[aria-disabled="true"] { opacity: 0.35; cursor: default; transform: none; }
 .round-btn--sm { width: 2.75rem; height: 2.75rem; }
 
 /* ---------- Header (translucent material) ---------- */
@@ -808,9 +808,18 @@ h1, h2, h3, p { margin: 0; }
 }
 
 @media (prefers-contrast: more) {
-  :root { --line: rgba(0,0,0,0.3); --line-strong: rgba(0,0,0,0.55); --ink-2: #1d1d1f; --ink-3: #3a3a3f; }
+  :root:not([data-theme="dark"]) { --line: rgba(0,0,0,0.3); --line-strong: rgba(0,0,0,0.55); --ink-2: #1d1d1f; --ink-3: #3a3a3f; }
   .site-header.is-scrolled { background: var(--bg); box-shadow: 0 1px 0 var(--line-strong); }
   .tile, .recipe-card, .steps { border-color: var(--line-strong); }
+}
+
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --line: rgba(255,255,255,0.3); --line-strong: rgba(255,255,255,0.55); --ink-2: #F2F2F7; --ink-3: #D1D1D6; }
+}
+
+@media print {
+  .js .reveal { opacity: 1 !important; transform: none !important; }
+  .site-header, .carousel-controls, .skip-link, .nav-toggle { display: none !important; }
 }
 
 @media (forced-colors: active) {

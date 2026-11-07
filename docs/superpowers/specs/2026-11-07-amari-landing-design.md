@@ -21,7 +21,7 @@ A marketing landing page for **Amari**, an AI kitchen assistant app: snap your f
 2. **Hero** — "AI Kitchen Assistant" pill, display headline (orange "Cook."), lede, App Store / Google Play badges, three value props (Instant meal ideas · Uses your ingredients · Smart, healthy choices). Right: an HTML/CSS iPhone mock (greeting, "Snap Your Ingredients" card, "Meal Ideas for You" with Jollof card) on an orange rounded-rect backdrop, with floating tomato, basil, avocado. Phone tilts toward the pointer with a critically damped spring; disabled under reduced motion / coarse pointers.
 3. **How It Works** — the three-step card: Snap & Scan → Get Meal Ideas → Cook & Enjoy.
 4. **Features** — bento grid: ingredient recognition, personalized to diet & allergies, smart pantry, step-by-step cook mode, less food waste, save & share.
-5. **Recipes** — horizontally draggable carousel of recipe cards (photo, time, "Uses N of your ingredients"). Pointer drag 1:1 with grab offset, momentum projection (`d = 0.998`) to nearest card snap, rubber-band at the ends, spring settle, interruptible mid-flight. Prev/next buttons + keyboard arrows. Native scroll fallback when reduced motion.
+5. **Recipes** — horizontally draggable carousel of recipe cards (photo, time, "Uses N of your ingredients"). Pointer drag 1:1 with grab offset, momentum projection (`d = 0.998`) to nearest card snap, rubber-band at the ends, spring settle, interruptible mid-flight. Prev/next buttons (aria-disabled at the ends so focus is kept) + keyboard arrows. Under reduced motion, direct manipulation stays (it is not vestibular motion) but all springs are replaced by instant snaps.
 6. **Download** — dark CTA panel with headline, badges.
 7. **Footer** — logo, small links, ©.
 

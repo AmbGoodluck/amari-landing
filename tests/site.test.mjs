@@ -160,3 +160,66 @@ test('no serious or critical accessibility violations (light and dark)', async (
     await page.close();
   }
 });
+
+/* ---- Pointer-lifecycle regressions (from code review) ---- */
+
+async function carouselPage() {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  page.once('close', () => ctx.close().catch(() => {}));
+  await page.goto(base, { waitUntil: 'networkidle' });
+  await page.locator('#recipes').scrollIntoViewIfNeeded();
+  const pos = () => page.$eval('.carousel-track', (t) => t.getBoundingClientRect().left);
+  const step = await page.$$eval('.recipe-card', (c) => c[1].getBoundingClientRect().left - c[0].getBoundingClientRect().left);
+  const vp = await page.locator('.carousel-viewport').boundingBox();
+  return { page, pos, step, vp, start: await pos() };
+}
+
+test('drag, hold still, release: no fling (velocity decays to zero)', async () => {
+  const { page, pos, vp, start } = await carouselPage();
+  const y = vp.y + vp.height / 2;
+  await page.mouse.move(vp.x + 900, y);
+  await page.mouse.down();
+  for (let i = 1; i <= 7; i++) await page.mouse.move(vp.x + 900 - i * 15, y);
+  await page.waitForTimeout(400);
+  await page.mouse.up();
+  await page.waitForTimeout(1200);
+  assert.ok(Math.abs((await pos()) - start) < 2, `flung after a hold: ${start} → ${await pos()}`);
+  await page.close();
+});
+
+test('tapping a moving carousel settles it on a card', async () => {
+  const { page, pos, step, vp, start } = await carouselPage();
+  await page.locator('.carousel-next').click();
+  await page.waitForTimeout(60);
+  await page.mouse.click(vp.x + 600, vp.y + 40);
+  await page.waitForTimeout(1200);
+  const p = await pos();
+  const offset = (start - p) / step;
+  assert.ok(Math.abs(offset - Math.round(offset)) < 0.02, `parked between cards at ${p} (offset ${offset})`);
+  await page.close();
+});
+
+test('press then release outside the carousel leaves no stale drag', async () => {
+  const { page, pos, vp, start } = await carouselPage();
+  const y = vp.y + vp.height / 2;
+  await page.mouse.move(vp.x + 600, y);
+  await page.mouse.down();
+  await page.mouse.move(vp.x + 600, vp.y - 200);   // leave before any move inside
+  await page.mouse.up();
+  await page.mouse.move(vp.x + 900, y);
+  for (let i = 1; i <= 8; i++) await page.mouse.move(vp.x + 900 - i * 30, y); // hover sweep, no button
+  await page.waitForTimeout(800);
+  assert.ok(Math.abs((await pos()) - start) < 2, 'hover moved the carousel');
+  assert.equal(await page.locator('.carousel-viewport.is-dragging').count(), 0);
+  await page.close();
+});
+
+test('keyboard focus stays on Next when the end is reached', async () => {
+  const { page } = await carouselPage();
+  await page.locator('.carousel-next').focus();
+  for (let i = 0; i < 8; i++) await page.keyboard.press('Enter');
+  assert.equal(await page.evaluate(() => document.activeElement?.classList.contains('carousel-next')), true);
+  assert.equal(await page.locator('.carousel-next').getAttribute('aria-disabled'), 'true');
+  await page.close();
+});
