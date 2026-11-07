@@ -1,0 +1,8 @@
+{
+  "name": "Amari — AI Kitchen Assistant",
+  "short_name": "Amari",
+  "icons": [{ "src": "/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }],
+  "theme_color": "#FF6B1A",
+  "background_color": "#FCFAF8",
+  "display": "browser"
+}

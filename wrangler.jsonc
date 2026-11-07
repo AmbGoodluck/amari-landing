@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "amari-landing",
+  "compatibility_date": "2026-10-01",
+  // Static site: no Worker script, just assets served from Cloudflare's edge.
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  }
+}
