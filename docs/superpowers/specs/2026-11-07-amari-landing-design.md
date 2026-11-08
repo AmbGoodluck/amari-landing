@@ -27,7 +27,7 @@ A marketing landing page for **Amari**, an AI kitchen assistant app: snap your f
 
 ## Design system
 
-- Color tokens on `:root`, dark-mode overrides via `prefers-color-scheme`. Brand orange `#FF6B1A` → `#FF8A3D` gradient; ink `#0B0B0C`; surface warm off-white `#FCFAF8`.
+- Color tokens on `:root`, dark-mode overrides via `prefers-color-scheme`. Brand is the app's **forest/herb green**: primary `#2F7D32`, deep `#1B5E20` (text/links), soft `#E8F5E9` (tints), dark-mode text `#81C784`. Primary buttons are green with white text (5.1:1). Ink `#0B0B0C`; surface warm off-white `#FCFAF8`; sage section tint `#F1F6EF`. The Download panel is a forest-green gradient. (Revised 2026-11-08: the mockup's orange was replaced by the app's green.)
 - Type: size-specific tracking (display −0.035em, h2 −0.025em, body 0), tight leading on display (1.0), 1.5 on body; `rem` units so layout scales with user text size.
 - Radius scale 12/20/28/40; layered soft shadows; materials: nav uses blur(20px) saturate(180%).
 - Motion: press feedback on `:active` (scale .97, 100ms). Reveal-on-scroll with opacity + small translate. Springs critically damped by default; bounce only after a flick.
