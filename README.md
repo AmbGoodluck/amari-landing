@@ -2,7 +2,7 @@
 
 **Snap. Discover. Cook.** Marketing site for Amari, the AI kitchen assistant that turns a photo of your fridge or pantry into personalized recipes.
 
-A zero-build static site (HTML, CSS, vanilla JS) served from Cloudflare's edge with **Workers static assets**.
+A zero-build static site (HTML, CSS, vanilla JS) hosted on **Cloudflare Pages**.
 
 ## Structure
 
@@ -15,7 +15,7 @@ public/
   _headers        # security headers + asset caching (CSP: self only)
   404.html
 tests/site.test.mjs   # Playwright + axe end-to-end checks
-wrangler.jsonc        # Cloudflare Workers static-assets config
+wrangler.jsonc        # Cloudflare Pages config (output dir: public)
 docs/superpowers/     # design spec + implementation plan
 ```
 
@@ -23,15 +23,22 @@ docs/superpowers/     # design spec + implementation plan
 
 ```bash
 npm install
-npm run dev        # wrangler dev → http://localhost:8787
+npm run dev        # wrangler pages dev → http://localhost:8788
 npm test           # Playwright + axe checks against ./public
 ```
 
-## Deploy
+## Deploy (Cloudflare Pages)
+
+**Option A: Git integration (auto-deploys on every push to `main`)**
+Cloudflare dashboard → Workers & Pages → Create → Pages → *Connect to Git* → pick `amari-landing`.
+Framework preset: **None** · Build command: *(leave empty)* · Build output directory: **`public`**.
+
+**Option B: from the CLI**
 
 ```bash
-npx wrangler login     # or set CLOUDFLARE_API_TOKEN (Edit Cloudflare Workers template)
-npm run deploy         # → https://amari-landing.<your-subdomain>.workers.dev
+npx wrangler login
+npm run pages:create   # first time only
+npm run deploy         # → https://amari-landing.pages.dev
 ```
 
 ## Design notes
