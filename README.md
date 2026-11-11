@@ -2,7 +2,7 @@
 
 **Snap. Discover. Cook.** Marketing site for Amari, the AI kitchen assistant that turns a photo of your fridge or pantry into personalized recipes.
 
-A zero-build static site (HTML, CSS, vanilla JS) hosted on **Cloudflare Pages**.
+A zero-build static site (HTML, CSS, vanilla JS) served by **Cloudflare Workers static assets**, deployed from GitHub with Workers Builds.
 
 ## Structure
 
@@ -15,7 +15,7 @@ public/
   _headers        # security headers + asset caching (CSP: self only)
   404.html
 tests/site.test.mjs   # Playwright + axe end-to-end checks
-wrangler.jsonc        # Cloudflare Pages config (output dir: public)
+wrangler.jsonc        # Cloudflare Workers static-assets config (assets dir: public)
 docs/superpowers/     # design spec + implementation plan
 ```
 
@@ -23,23 +23,23 @@ docs/superpowers/     # design spec + implementation plan
 
 ```bash
 npm install
-npm run dev        # wrangler pages dev → http://localhost:8788
+npm run dev        # wrangler dev → http://localhost:8787
 npm test           # Playwright + axe checks against ./public
 ```
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers Builds)
 
-**Option A: Git integration (auto-deploys on every push to `main`)**
-Cloudflare dashboard → Workers & Pages → Create → Pages → *Connect to Git* → pick `amari-landing`.
-Framework preset: **None** · Build command: *(leave empty)* · Build output directory: **`public`**.
+Connected to GitHub: every push to `main` builds and deploys automatically.
 
-**Option B: from the CLI**
+| Setting | Value |
+|---|---|
+| Build command | *(empty)* |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | `/` |
+| Production branch | `main` |
 
-```bash
-npx wrangler login
-npm run pages:create   # first time only
-npm run deploy         # → https://amari-landing.pages.dev
-```
+`wrangler.jsonc` points `assets.directory` at `./public`; there is no Worker script.
+Manual deploy from a laptop: `npx wrangler login && npm run deploy`.
 
 ## Design notes
 

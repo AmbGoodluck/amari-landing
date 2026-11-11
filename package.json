@@ -5,10 +5,9 @@
   "description": "Amari \u2014 AI kitchen assistant landing page.",
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev",
+    "dev": "wrangler dev",
     "test": "node --test tests/*.test.mjs",
-    "deploy": "wrangler pages deploy",
-    "pages:create": "wrangler pages project create amari-landing --production-branch main"
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

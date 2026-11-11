@@ -2,7 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "amari-landing",
   "compatibility_date": "2026-10-01",
-  // Cloudflare Pages: static site, no build step. _headers and 404.html in
-  // ./public are picked up by Pages automatically.
-  "pages_build_output_dir": "./public"
+  // Static site served by Cloudflare Workers static assets (Workers Builds
+  // runs `npx wrangler deploy`). No Worker script — just the files in ./public.
+  // _headers and 404.html in ./public are honoured automatically.
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  }
 }
