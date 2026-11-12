@@ -13,7 +13,11 @@ public/
   app.js          # springs, pointer tilt, momentum carousel, menu, reveals
   assets/         # optimized WebP photography, favicon, OG image
   _headers        # security headers + asset caching (CSP: self only)
+  terms.html      # generated from content/legal/terms.md
+  privacy.html    # generated from content/legal/privacy.md
   404.html
+content/legal/        # source Markdown for /terms and /privacy
+scripts/build-legal.mjs  # zero-dependency Markdown → HTML for the legal pages
 tests/site.test.mjs   # Playwright + axe end-to-end checks
 wrangler.jsonc        # Cloudflare Workers static-assets config (assets dir: public)
 docs/superpowers/     # design spec + implementation plan
@@ -25,6 +29,7 @@ docs/superpowers/     # design spec + implementation plan
 npm install
 npm run dev        # wrangler dev → http://localhost:8787
 npm test           # Playwright + axe checks against ./public
+npm run build:legal  # after editing content/legal/*.md (tests fail if you forget)
 ```
 
 ## Deploy (Cloudflare Workers Builds)
