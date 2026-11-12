@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "test": "node --test tests/*.test.mjs",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "build:legal": "node scripts/build-legal.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

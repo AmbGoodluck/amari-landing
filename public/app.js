@@ -369,6 +369,21 @@
     relayout();
   }
 
+  /* ------------------------------------------------------------------
+     Legal pages: table of contents is open beside the text on wide
+     screens, collapsed above it on small ones (closes after a jump).
+  ------------------------------------------------------------------ */
+  const legalToc = document.querySelector('[data-legal-toc]');
+  if (legalToc) {
+    const wide = window.matchMedia('(min-width: 961px)');
+    const sync = () => { legalToc.open = wide.matches; };
+    sync();
+    wide.addEventListener('change', sync);
+    legalToc.addEventListener('click', (e) => {
+      if (e.target.closest('a') && !wide.matches) legalToc.open = false;
+    });
+  }
+
   /* Footer year. */
   const year = document.querySelector('[data-year]');
   if (year) year.textContent = String(new Date().getFullYear());

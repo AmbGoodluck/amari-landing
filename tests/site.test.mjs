@@ -10,6 +10,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const { AxeBuilder } = await import('@axe-core/playwright');
+const { execFileSync } = await import('node:child_process');
 
 const ROOT = new URL('../public/', import.meta.url).pathname;
 const TYPES = {
@@ -27,6 +28,8 @@ before(async () => {
   server = createServer(async (req, res) => {
     let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     if (path.endsWith('/')) path += 'index.html';
+    // Mirror Cloudflare static assets' html_handling: /terms → terms.html
+    if (!extname(path)) path += '.html';
     const file = normalize(join(ROOT, path));
     if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
     try {
@@ -47,7 +50,7 @@ after(async () => {
   server?.close();
 });
 
-async function open(opts = {}) {
+async function open(opts = {}, path = '') {
   const context = await browser.newContext(opts); // axe requires an explicit context
   const page = await context.newPage();
   page.once('close', () => context.close().catch(() => {}));
@@ -56,7 +59,7 @@ async function open(opts = {}) {
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
   page.on('response', (r) => { if (r.status() >= 400) errors.push(`${r.status()}: ${r.url()}`); });
-  await page.goto(base, { waitUntil: 'networkidle' });
+  await page.goto(base + path, { waitUntil: 'networkidle' });
   return { page, errors };
 }
 
@@ -222,4 +225,48 @@ test('keyboard focus stays on Next when the end is reached', async () => {
   assert.equal(await page.evaluate(() => document.activeElement?.classList.contains('carousel-next')), true);
   assert.equal(await page.locator('.carousel-next').getAttribute('aria-disabled'), 'true');
   await page.close();
+});
+
+/* ---- Legal pages: /terms and /privacy ---- */
+
+for (const [route, titleRe, h1] of [['terms', /Terms of Use/, 'Terms of Use'], ['privacy', /Privacy Policy/, 'Privacy Policy']]) {
+  test(`/${route} renders cleanly under the CSP with a working table of contents`, async () => {
+    const { page, errors } = await open({ viewport: { width: 1280, height: 900 } }, `${route}`);
+    assert.match(await page.title(), titleRe);
+    assert.equal((await page.locator('h1').textContent()).trim(), h1);
+    assert.equal(await page.locator('.site-header .brand-mark use[href="#logo"]').count(), 1, 'logo missing from nav');
+    const tocTargets = await page.$$eval('.legal-toc a[href^="#"]', (as) => as.map((a) => a.getAttribute('href')));
+    assert.ok(tocTargets.length >= 15, `TOC too short (${tocTargets.length})`);
+    // ids such as "1-what-amari-does" are valid HTML but not valid CSS #selectors
+    for (const h of tocTargets) assert.equal(await page.locator(`[id="${h.slice(1)}"]`).count(), 1, `TOC target missing: ${h}`);
+    assert.ok(await page.locator('mark.placeholder').count() > 0, 'unfilled placeholders should be highlighted');
+    const text = await page.locator('main').textContent();
+    assert.doesNotMatch(text, /Appendix A|App Store Connect|Confirm against each provider/, 'internal notes leaked');
+    assert.deepEqual(errors, []);
+    await page.close();
+  });
+
+  test(`/${route} has no serious accessibility violations and no overflow at 320px`, async () => {
+    for (const colorScheme of ['light', 'dark']) {
+      const { page } = await open({ viewport: { width: 320, height: 800 }, colorScheme, reducedMotion: 'reduce' }, `${route}`);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      assert.ok(overflow <= 0, `${route} overflows by ${overflow}px (${colorScheme})`);
+      const results = await new AxeBuilder({ page }).analyze();
+      const bad = results.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
+      assert.deepEqual(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`), [], `${route} ${colorScheme}`);
+      await page.close();
+    }
+  });
+}
+
+test('homepage footer links to /terms and /privacy', async () => {
+  const { page } = await open({ viewport: { width: 1280, height: 900 } });
+  assert.equal(await page.locator('.site-footer a[href="/terms"]').count(), 1);
+  assert.equal(await page.locator('.site-footer a[href="/privacy"]').count(), 1);
+  await page.close();
+});
+
+test('legal HTML is in sync with its markdown sources', () => {
+  assert.doesNotThrow(() => execFileSync(process.execPath, ['scripts/build-legal.mjs', '--check'], { stdio: 'pipe' }),
+    'public/terms.html or public/privacy.html is stale: run `npm run build:legal`');
 });
