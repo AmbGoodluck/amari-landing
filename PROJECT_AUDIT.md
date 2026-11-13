@@ -165,3 +165,50 @@ The brief asks for one place to change the brand name, nav, URLs, SEO defaults a
 ## 7. Changes made during this phase
 - **`/terms` and `/privacy` added** (commit `3847dbb`), at the owner's request, from the supplied documents. The sources are kept verbatim in `content/legal/`. Two things were not published: the privacy policy's internal note "[Confirm against each provider's current API terms before publishing.]" and Appendices A–B (App Store Connect working notes). The `app.askamari.us/privacy` link is rewritten to this site's `/privacy`. Placeholders are highlighted, not filled.
 - No other functionality was changed or removed.
+
+---
+
+## 8. Status after Phases 2–10 (2026-11-13)
+
+**Owner decisions applied:** green brand (logo palette); App Store and Google Play badges removed while the apps are in testing; production domain `askamari.us`; Cloudflare Web Analytics; feature copy from the owner's November 2026 feature list, following its words-to-avoid guidance.
+
+| Finding | Status |
+|---|---|
+| P0-1 Legal placeholders | ⏳ **Open (owner).** Still highlighted on `/terms` and `/privacy`. The owner's reply "Amari: Your Kitchen Assistance" needs confirming as the operator's legal name. The postal address, state and county are also still needed. |
+| P0-2 Google Play badge | ✅ Removed (owner: still testing) |
+| P0-3 Dead CTAs | ✅ All CTAs go to the live web app `app.askamari.us`; test enforces no `#` links and no store links |
+| P1-1 Sign In | ✅ Links to the web app |
+| P1-2 Feature copy | ✅ Rewritten from the owner's verified feature list; all marked "Available now", iPhone "In testing" |
+| P1-3 Brand name | ✅ "Amari" on the site, "Ask Amari" as the app name in JSON-LD and the FAQ |
+| P1-4 SEO basics | ✅ Canonical, absolute OG, JSON-LD, sitemap, robots |
+| P1-5 FAQ / Benefits / Contact / secondary CTA | ✅ Added (`/contact` page included) |
+| P1-6 HSTS | ✅ Added (no `includeSubDomains`/`preload` until confirmed) |
+| P1-7 Recipe cards | ✅ Image, title, cuisine, description, time, difficulty, ingredient count and diet tags, labelled as illustrations |
+| P2-1 Mobile LCP | ✅ 2.6 s → 2.3 s; LCP is now text |
+| P2-2 Central config | ✅ `site.config.json` + `scripts/build.mjs` (Option A, zero dependencies) |
+| P2-3 Color literals and type tokens | ✅ 0 raw colors outside tokens (enforced by lint); typography scale tokens added |
+| P2-4 Caching | ✅ Fingerprinted `/static/*` immutable; HTML revalidates |
+| P2-5 CI / Dependabot | ⏳ Open: enable Dependabot in GitHub settings; Workers Builds deploys, and `npm test` should run before each push |
+| P2-6 Inter font | ➖ Decided against: the system stack (SF on Apple devices) matches the Apple direction with zero font bytes |
+| P2-7 Minification | ➖ Deferred (P3): ~2 KB gain doesn't justify a dependency |
+| New: rate limit on `/api/event` | ⏳ Open (P2): add one Cloudflare rate-limiting rule (SECURITY.md) |
+| New: website analytics disclosure | ⏳ Open (owner): add one sentence to the Privacy Policy (SECURITY.md) |
+
+### Final acceptance checklist
+| Criterion | Result |
+|---|---|
+| Builds successfully | ✅ `npm run build`; `build:check` in tests |
+| All routes work | ✅ 4 pages + 404 (tests + `wrangler dev`) |
+| No broken navigation / dead CTAs | ✅ link-resolution test |
+| No major responsive issues | ✅ 9 widths × 4 pages |
+| No critical security vulnerabilities / exposed secrets | ✅ `npm audit` 0, no secrets, strict CSP |
+| No major accessibility violations | ✅ axe 0 serious/critical, Lighthouse 100 |
+| No significant console errors | ✅ asserted on every page |
+| No major performance bottlenecks | ✅ Lighthouse 99–100, CLS 0 |
+| SEO metadata correct; structured data valid | ✅ tested locally; ⏳ run Google's Rich Results Test after deploy |
+| Forms work if implemented | ➖ No forms (no waitlist needed: the web app is live) |
+| External links work | ✅ hosts allowlisted in tests; ⏳ live check after deploy |
+| Production config and rollback documented | ✅ DEPLOYMENT.md |
+| Legal pages accurately represent the product | ⏳ Owner-supplied text published verbatim; **placeholders must be filled (P0-1)** |
+
+**Verdict:** ready to deploy, with one **P0 owner action**: fill in the operator's legal name, postal address and governing-law state and county in `content/legal/*.md`, then run `npm run build`.

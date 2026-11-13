@@ -1,176 +1,205 @@
-// End-to-end checks for the static landing page.
-// Serves ./public on a throwaway local server and drives it with Playwright.
+// End-to-end checks for the built site in ./public.
+// A local server mirrors Cloudflare: extensionless routes (/terms → terms.html),
+// the 404 page, the generated _headers CSP, and /api/* handled by the real Worker.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { readFileSync, existsSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 import { createRequire } from 'node:module';
+import worker from '../worker/index.js';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const { AxeBuilder } = await import('@axe-core/playwright');
-const { execFileSync } = await import('node:child_process');
 
 const ROOT = new URL('../public/', import.meta.url).pathname;
+const config = JSON.parse(readFileSync(new URL('../site.config.json', import.meta.url), 'utf8'));
+const HEADERS = readFileSync(join(ROOT, '_headers'), 'utf8');
+const CSP = HEADERS.match(/Content-Security-Policy:\s*(.+)/)[1].trim();
 const TYPES = {
-  '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript',
-  '.svg': 'image/svg+xml', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg',
-  '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.txt': 'text/plain',
+  '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml',
+  '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.xml': 'application/xml',
+  '.webmanifest': 'application/manifest+json', '.txt': 'text/plain',
 };
-
-const HEADERS_FILE = await readFile(join(ROOT, '_headers'), 'utf8');
-const CSP = HEADERS_FILE.match(/Content-Security-Policy:\s*(.+)/)[1].trim();
+const PAGES = ['/', '/terms', '/privacy', '/contact'];
+const WIDTHS = [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920];
 
 let server, base, browser;
+const recorded = []; // events the Worker wrote
 
 before(async () => {
+  const env = {
+    EVENTS: { writeDataPoint: (d) => recorded.push(d.blobs[0]) },
+    ASSETS: { fetch: () => new Response('asset', { status: 200 }) },
+  };
   server = createServer(async (req, res) => {
-    let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    if (url.pathname.startsWith('/api/')) {
+      const chunks = []; for await (const c of req) chunks.push(c);
+      const r = await worker.fetch(new Request(url, { method: req.method, headers: req.headers, body: ['GET', 'HEAD'].includes(req.method) ? undefined : Buffer.concat(chunks) }), env);
+      res.writeHead(r.status, Object.fromEntries(r.headers)); res.end(Buffer.from(await r.arrayBuffer())); return;
+    }
+    let path = decodeURIComponent(url.pathname);
     if (path.endsWith('/')) path += 'index.html';
-    // Mirror Cloudflare static assets' html_handling: /terms → terms.html
     if (!extname(path)) path += '.html';
     const file = normalize(join(ROOT, path));
-    if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
-    try {
-      const body = await readFile(file);
-      res.writeHead(200, {
-        'content-type': TYPES[extname(file)] ?? 'application/octet-stream',
-        'content-security-policy': CSP, // same policy production serves via _headers
-      }).end(body);
-    } catch { res.writeHead(404).end('not found'); }
+    const send = async (status, f) => res.writeHead(status, { 'content-type': TYPES[extname(f)] ?? 'application/octet-stream', 'content-security-policy': CSP }).end(await readFile(f));
+    if (!file.startsWith(ROOT) || !existsSync(file)) return send(404, join(ROOT, '404.html'));
+    return send(200, file);
   });
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
-  base = `http://127.0.0.1:${server.address().port}/`;
+  base = `http://127.0.0.1:${server.address().port}`;
   browser = await chromium.launch();
 });
 
-after(async () => {
-  await browser?.close();
-  server?.close();
-});
+after(async () => { await browser?.close(); server?.close(); });
 
-async function open(opts = {}, path = '') {
-  const context = await browser.newContext(opts); // axe requires an explicit context
+async function open(opts = {}, path = '/') {
+  const context = await browser.newContext(opts);
   const page = await context.newPage();
   page.once('close', () => context.close().catch(() => {}));
+  // External destinations are stubbed so tests never leave the machine.
+  await page.route(/^https:\/\/(app\.)?askamari\.us\//, (r) => r.fulfill({ status: 200, body: 'stub' }));
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-  page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
-  page.on('response', (r) => { if (r.status() >= 400) errors.push(`${r.status()}: ${r.url()}`); });
+  page.on('response', (r) => { if (r.status() >= 400 && r.url().startsWith(base)) errors.push(`${r.status()}: ${r.url()}`); });
   await page.goto(base + path, { waitUntil: 'networkidle' });
   return { page, errors };
 }
 
-test('loads with a title and no console or network errors', async () => {
-  const { page, errors } = await open({ viewport: { width: 1440, height: 900 } });
-  assert.match(await page.title(), /Amari/);
-  assert.equal(await page.locator('h1').count(), 1);
-  assert.deepEqual(errors, []);
+/* ------------------------------------------------------------------ */
+/* Pages and links                                                     */
+/* ------------------------------------------------------------------ */
+for (const path of PAGES) {
+  test(`${path} loads with one h1, a canonical URL and no console or network errors`, async () => {
+    const { page, errors } = await open({ viewport: { width: 1280, height: 900 } }, path);
+    assert.equal(await page.locator('h1').count(), 1);
+    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), config.site.url + (path === '/' ? '/' : path));
+    assert.equal(await page.locator('.site-header .brand-mark use[href="#logo"]').count(), 1, 'logo missing from nav');
+    assert.deepEqual(errors, []);
+    await page.close();
+  });
+}
+
+test('the homepage title and description come from site.config.json', async () => {
+  const { page } = await open({ viewport: { width: 1280, height: 900 } });
+  assert.equal(await page.title(), config.seo.title);
+  assert.equal(await page.locator('meta[name=description]').getAttribute('content'), config.seo.description);
   await page.close();
 });
 
-test('404 page renders under the same policy without errors', async () => {
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  const errors = [];
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-  await page.goto(`${base}404.html`, { waitUntil: 'networkidle' });
-  assert.match(await page.title(), /not found/i);
-  assert.deepEqual(errors, []);
-  await context.close();
+test('no dead links: every in-page anchor, internal route and external host resolves', async () => {
+  const allowedHosts = new Set([new URL(config.site.url).host, new URL(config.links.webApp).host]);
+  for (const path of PAGES) {
+    const { page } = await open({ viewport: { width: 1280, height: 900 } }, path);
+    const hrefs = await page.$$eval('a[href]', (as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
+    for (const h of hrefs) {
+      assert.notEqual(h, '#', `${path}: empty "#" link`);
+      if (h.startsWith('#')) {
+        assert.equal(await page.locator(`[id="${h.slice(1)}"]`).count(), 1, `${path}: missing target ${h}`);
+      } else if (h.startsWith('/')) {
+        const [route, hash] = h.split('#');
+        const res = await page.request.get(base + route);
+        assert.equal(res.status(), 200, `${path}: ${h} → ${res.status()}`);
+        if (hash) assert.ok((await res.text()).includes(`id="${hash}"`), `${path}: ${h} anchor missing`);
+      } else if (h.startsWith('mailto:')) {
+        assert.equal(h, `mailto:${config.contact.email}`, `${path}: unexpected mailto ${h}`);
+      } else {
+        const u = new URL(h);
+        assert.equal(u.protocol, 'https:', `${path}: insecure link ${h}`);
+        assert.ok(allowedHosts.has(u.host), `${path}: unexpected external host ${h}`);
+      }
+    }
+    await page.close();
+  }
 });
 
-test('every in-page nav link points at an existing section', async () => {
-  const { page } = await open({ viewport: { width: 1440, height: 900 } });
-  const hrefs = await page.$$eval('a[href^="#"]', (as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
-  for (const id of ['#features', '#how-it-works', '#recipes', '#download', '#main']) assert.ok(hrefs.includes(id), `missing link ${id}`);
-  for (const h of hrefs) {
-    if (h === '#') continue;
-    assert.equal(await page.locator(h).count(), 1, `no target for ${h}`);
+test('no app-store download links while the apps are in testing', async () => {
+  const { page } = await open({ viewport: { width: 1280, height: 900 } });
+  const text = await page.locator('body').textContent();
+  assert.doesNotMatch(text, /Google Play|Download on the App Store/);
+  assert.equal(await page.locator('a[href*="apps.apple.com"], a[href*="play.google.com"]').count(), 0);
+  for (const sel of ['[data-track="hero_cta"]', '[data-track="nav_cta"]', '[data-track="get_started_cta"]']) {
+    assert.equal(await page.locator(sel).getAttribute('href'), config.links.webApp, `${sel} should open the web app`);
   }
   await page.close();
 });
 
-test('images all have alt text and intrinsic sizes', async () => {
-  const { page } = await open({ viewport: { width: 1440, height: 900 } });
-  const bad = await page.$$eval('img', (imgs) => imgs
-    .filter((i) => !i.hasAttribute('alt') || !i.getAttribute('width') || !i.getAttribute('height'))
-    .map((i) => i.src));
-  assert.deepEqual(bad, []);
-  await page.close();
+test('legal pages: table of contents works, placeholders are highlighted, internal notes are not published', async () => {
+  for (const path of ['/terms', '/privacy']) {
+    const { page } = await open({ viewport: { width: 1280, height: 900 } }, path);
+    const targets = await page.$$eval('.legal-toc a[href^="#"]', (as) => as.map((a) => a.getAttribute('href')));
+    assert.ok(targets.length >= 15, `${path}: TOC too short`);
+    for (const h of targets) assert.equal(await page.locator(`[id="${h.slice(1)}"]`).count(), 1, `${path}: ${h}`);
+    assert.ok(await page.locator('mark.placeholder').count() > 0);
+    assert.doesNotMatch(await page.locator('main').textContent(), /Appendix A|App Store Connect|Confirm against each provider/);
+    await page.close();
+  }
 });
 
-test('no horizontal overflow on a 375px phone', async () => {
-  const { page } = await open({ viewport: { width: 375, height: 812 } });
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-  assert.ok(overflow <= 0, `page overflows by ${overflow}px`);
-  await page.close();
+test('unknown routes return the branded 404 page, marked noindex', async () => {
+  const res = await fetch(`${base}/does-not-exist`);
+  assert.equal(res.status, 404);
+  const html = await res.text();
+  assert.match(html, /This page isn’t on the menu/);
+  assert.match(html, /<meta name="robots" content="noindex">/);
 });
 
-test('mobile menu opens, traps nothing, and closes with Escape', async () => {
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+test('no horizontal overflow and unobstructed hero buttons at all 9 widths, on every page', async () => {
+  for (const width of WIDTHS) {
+    for (const path of PAGES) {
+      const { page } = await open({ viewport: { width, height: 900 } }, path);
+      const r = await page.evaluate(() => {
+        const overflow = document.documentElement.scrollWidth - innerWidth;
+        const blocked = [...document.querySelectorAll('.hero-actions .btn')].filter((el) => {
+          const b = el.getBoundingClientRect();
+          const top = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+          return b.width > 0 && top && !el.contains(top);
+        }).length;
+        return { overflow, blocked };
+      });
+      assert.ok(r.overflow <= 0, `${path} @${width}px overflows by ${r.overflow}px`);
+      assert.equal(r.blocked, 0, `${path} @${width}px: hero button covered`);
+      await page.close();
+    }
+  }
+});
+
+/* ------------------------------------------------------------------ */
+/* Interaction                                                         */
+/* ------------------------------------------------------------------ */
+test('mobile menu opens, and closes with Escape returning focus to the toggle', async () => {
   const { page } = await open({ viewport: { width: 390, height: 844 } });
   const btn = page.locator('.nav-toggle');
-  await assert.doesNotReject(btn.waitFor({ state: 'visible' }));
-  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
   await btn.click();
   assert.equal(await btn.getAttribute('aria-expanded'), 'true');
   await page.waitForSelector('#nav-menu.is-open');
   await page.keyboard.press('Escape');
   assert.equal(await btn.getAttribute('aria-expanded'), 'false');
+  assert.equal(await page.evaluate(() => document.activeElement?.classList.contains('nav-toggle')), true);
   await page.close();
 });
 
-test('recipe carousel advances with the next button and keyboard', async () => {
+test('FAQ items open and close from the keyboard', async () => {
   const { page } = await open({ viewport: { width: 1280, height: 900 } });
-  await page.locator('#recipes').scrollIntoViewIfNeeded();
-  const pos = () => page.$eval('.carousel-track', (t) => t.getBoundingClientRect().left);
-  const start = await pos();
-  await page.locator('.carousel-next').click();
-  await page.waitForTimeout(900);
-  const afterNext = await pos();
-  assert.ok(afterNext < start - 50, `track did not move (${start} → ${afterNext})`);
-  await page.locator('.carousel-viewport').focus();
-  await page.keyboard.press('ArrowLeft');
-  await page.waitForTimeout(900);
-  assert.ok(Math.abs((await pos()) - start) < 2, 'ArrowLeft did not return to start');
+  const first = page.locator('.faq-item').first();
+  await first.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await first.evaluate((d) => d.open), true);
+  assert.ok(await first.locator('.faq-answer').isVisible());
+  await page.keyboard.press('Enter');
+  assert.equal(await first.evaluate((d) => d.open), false);
   await page.close();
 });
-
-test('recipe carousel follows a pointer drag', async () => {
-  const { page } = await open({ viewport: { width: 1280, height: 900 } });
-  await page.locator('#recipes').scrollIntoViewIfNeeded();
-  const vp = await page.locator('.carousel-viewport').boundingBox();
-  const pos = () => page.$eval('.carousel-track', (t) => t.getBoundingClientRect().left);
-  const start = await pos();
-  const y = vp.y + vp.height / 2;
-  await page.mouse.move(vp.x + vp.width * 0.8, y);
-  await page.mouse.down();
-  for (let i = 1; i <= 10; i++) await page.mouse.move(vp.x + vp.width * 0.8 - i * 30, y);
-  await page.mouse.up();
-  await page.waitForTimeout(1200);
-  assert.ok((await pos()) < start - 50, 'drag did not scroll the track');
-  await page.close();
-});
-
-test('no serious or critical accessibility violations (light and dark)', async () => {
-  for (const colorScheme of ['light', 'dark']) {
-    const { page } = await open({ viewport: { width: 1280, height: 900 }, colorScheme, reducedMotion: 'reduce' });
-    const results = await new AxeBuilder({ page }).analyze();
-    const bad = results.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
-    assert.deepEqual(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`), [], colorScheme);
-    await page.close();
-  }
-});
-
-/* ---- Pointer-lifecycle regressions (from code review) ---- */
 
 async function carouselPage() {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  const page = await ctx.newPage();
-  page.once('close', () => ctx.close().catch(() => {}));
-  await page.goto(base, { waitUntil: 'networkidle' });
+  const { page } = await open({ viewport: { width: 1280, height: 900 } });
   await page.locator('#recipes').scrollIntoViewIfNeeded();
   const pos = () => page.$eval('.carousel-track', (t) => t.getBoundingClientRect().left);
   const step = await page.$$eval('.recipe-card', (c) => c[1].getBoundingClientRect().left - c[0].getBoundingClientRect().left);
@@ -178,47 +207,52 @@ async function carouselPage() {
   return { page, pos, step, vp, start: await pos() };
 }
 
-test('drag, hold still, release: no fling (velocity decays to zero)', async () => {
-  const { page, pos, vp, start } = await carouselPage();
-  const y = vp.y + vp.height / 2;
-  await page.mouse.move(vp.x + 900, y);
-  await page.mouse.down();
-  for (let i = 1; i <= 7; i++) await page.mouse.move(vp.x + 900 - i * 15, y);
-  await page.waitForTimeout(400);
-  await page.mouse.up();
-  await page.waitForTimeout(1200);
-  assert.ok(Math.abs((await pos()) - start) < 2, `flung after a hold: ${start} → ${await pos()}`);
+test('carousel: next button and arrow keys move it', async () => {
+  const { page, pos, start } = await carouselPage();
+  await page.locator('.carousel-next').click();
+  await page.waitForTimeout(900);
+  assert.ok((await pos()) < start - 50);
+  await page.locator('.carousel-viewport').focus();
+  await page.keyboard.press('ArrowLeft');
+  await page.waitForTimeout(900);
+  assert.ok(Math.abs((await pos()) - start) < 2);
   await page.close();
 });
 
-test('tapping a moving carousel settles it on a card', async () => {
+test('carousel: follows a drag; a hold before release does not fling', async () => {
+  const { page, pos, vp, start } = await carouselPage();
+  const y = vp.y + vp.height / 2;
+  await page.mouse.move(vp.x + 900, y); await page.mouse.down();
+  for (let i = 1; i <= 10; i++) await page.mouse.move(vp.x + 900 - i * 30, y);
+  await page.mouse.up(); await page.waitForTimeout(1200);
+  const afterDrag = await pos();
+  assert.ok(afterDrag < start - 50, 'drag did not move the track');
+  await page.mouse.move(vp.x + 600, y); await page.mouse.down();
+  for (let i = 1; i <= 7; i++) await page.mouse.move(vp.x + 600 + i * 15, y);
+  await page.waitForTimeout(400); await page.mouse.up(); await page.waitForTimeout(1200);
+  assert.ok(Math.abs((await pos()) - afterDrag) < 2, 'flung after a hold');
+  await page.close();
+});
+
+test('carousel: a tap mid-flight settles on a card; release outside leaves no stale drag', async () => {
   const { page, pos, step, vp, start } = await carouselPage();
   await page.locator('.carousel-next').click();
   await page.waitForTimeout(60);
   await page.mouse.click(vp.x + 600, vp.y + 40);
   await page.waitForTimeout(1200);
-  const p = await pos();
-  const offset = (start - p) / step;
-  assert.ok(Math.abs(offset - Math.round(offset)) < 0.02, `parked between cards at ${p} (offset ${offset})`);
-  await page.close();
-});
-
-test('press then release outside the carousel leaves no stale drag', async () => {
-  const { page, pos, vp, start } = await carouselPage();
+  const off = (start - (await pos())) / step;
+  assert.ok(Math.abs(off - Math.round(off)) < 0.02, `parked between cards (${off})`);
+  const settled = await pos();
   const y = vp.y + vp.height / 2;
-  await page.mouse.move(vp.x + 600, y);
-  await page.mouse.down();
-  await page.mouse.move(vp.x + 600, vp.y - 200);   // leave before any move inside
-  await page.mouse.up();
-  await page.mouse.move(vp.x + 900, y);
-  for (let i = 1; i <= 8; i++) await page.mouse.move(vp.x + 900 - i * 30, y); // hover sweep, no button
+  await page.mouse.move(vp.x + 600, y); await page.mouse.down();
+  await page.mouse.move(vp.x + 600, vp.y - 200); await page.mouse.up();
+  for (let i = 1; i <= 8; i++) await page.mouse.move(vp.x + 900 - i * 30, y);
   await page.waitForTimeout(800);
-  assert.ok(Math.abs((await pos()) - start) < 2, 'hover moved the carousel');
-  assert.equal(await page.locator('.carousel-viewport.is-dragging').count(), 0);
+  assert.ok(Math.abs((await pos()) - settled) < 2, 'hover moved the carousel');
   await page.close();
 });
 
-test('keyboard focus stays on Next when the end is reached', async () => {
+test('carousel: keyboard focus stays on Next at the end', async () => {
   const { page } = await carouselPage();
   await page.locator('.carousel-next').focus();
   for (let i = 0; i < 8; i++) await page.keyboard.press('Enter');
@@ -227,46 +261,79 @@ test('keyboard focus stays on Next when the end is reached', async () => {
   await page.close();
 });
 
-/* ---- Legal pages: /terms and /privacy ---- */
-
-for (const [route, titleRe, h1] of [['terms', /Terms of Use/, 'Terms of Use'], ['privacy', /Privacy Policy/, 'Privacy Policy']]) {
-  test(`/${route} renders cleanly under the CSP with a working table of contents`, async () => {
-    const { page, errors } = await open({ viewport: { width: 1280, height: 900 } }, `${route}`);
-    assert.match(await page.title(), titleRe);
-    assert.equal((await page.locator('h1').textContent()).trim(), h1);
-    assert.equal(await page.locator('.site-header .brand-mark use[href="#logo"]').count(), 1, 'logo missing from nav');
-    const tocTargets = await page.$$eval('.legal-toc a[href^="#"]', (as) => as.map((a) => a.getAttribute('href')));
-    assert.ok(tocTargets.length >= 15, `TOC too short (${tocTargets.length})`);
-    // ids such as "1-what-amari-does" are valid HTML but not valid CSS #selectors
-    for (const h of tocTargets) assert.equal(await page.locator(`[id="${h.slice(1)}"]`).count(), 1, `TOC target missing: ${h}`);
-    assert.ok(await page.locator('mark.placeholder').count() > 0, 'unfilled placeholders should be highlighted');
-    const text = await page.locator('main').textContent();
-    assert.doesNotMatch(text, /Appendix A|App Store Connect|Confirm against each provider/, 'internal notes leaked');
-    assert.deepEqual(errors, []);
-    await page.close();
-  });
-
-  test(`/${route} has no serious accessibility violations and no overflow at 320px`, async () => {
-    for (const colorScheme of ['light', 'dark']) {
-      const { page } = await open({ viewport: { width: 320, height: 800 }, colorScheme, reducedMotion: 'reduce' }, `${route}`);
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-      assert.ok(overflow <= 0, `${route} overflows by ${overflow}px (${colorScheme})`);
-      const results = await new AxeBuilder({ page }).analyze();
-      const bad = results.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
-      assert.deepEqual(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`), [], `${route} ${colorScheme}`);
-      await page.close();
-    }
-  });
-}
-
-test('homepage footer links to /terms and /privacy', async () => {
+/* ------------------------------------------------------------------ */
+/* Analytics events                                                    */
+/* ------------------------------------------------------------------ */
+test('conversion events reach the Worker (hero CTA, FAQ, section views)', async () => {
+  recorded.length = 0;
   const { page } = await open({ viewport: { width: 1280, height: 900 } });
-  assert.equal(await page.locator('.site-footer a[href="/terms"]').count(), 1);
-  assert.equal(await page.locator('.site-footer a[href="/privacy"]').count(), 1);
+  await page.locator('.faq-item summary').first().scrollIntoViewIfNeeded();
+  await page.locator('.faq-item summary').first().click();
+  await page.locator('[data-track="hero_cta"]').scrollIntoViewIfNeeded();
+  await Promise.all([page.waitForURL(/app\.askamari\.us/), page.locator('[data-track="hero_cta"]').click()]);
+  await new Promise((r) => setTimeout(r, 500));
+  for (const e of ['hero_cta', 'faq_open', 'section_view']) assert.ok(recorded.includes(e), `missing ${e}: ${recorded}`);
   await page.close();
 });
 
-test('legal HTML is in sync with its markdown sources', () => {
-  assert.doesNotThrow(() => execFileSync(process.execPath, ['scripts/build-legal.mjs', '--check'], { stdio: 'pipe' }),
-    'public/terms.html or public/privacy.html is stale: run `npm run build:legal`');
+test('no events are sent when the visitor signals Global Privacy Control', async () => {
+  recorded.length = 0;
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await context.addInitScript(() => Object.defineProperty(navigator, 'globalPrivacyControl', { get: () => true }));
+  const page = await context.newPage();
+  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.locator('.faq-item summary').first().click();
+  await page.waitForTimeout(500);
+  assert.deepEqual(recorded, []);
+  await context.close();
+});
+
+/* ------------------------------------------------------------------ */
+/* Accessibility                                                       */
+/* ------------------------------------------------------------------ */
+test('no serious or critical axe violations on any page, light and dark', async () => {
+  for (const path of PAGES) {
+    for (const colorScheme of ['light', 'dark']) {
+      const width = path === '/' ? 1280 : 375;
+      const { page } = await open({ viewport: { width, height: 900 }, colorScheme, reducedMotion: 'reduce' }, path);
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+      const bad = results.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
+      assert.deepEqual(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`), [], `${path} ${colorScheme}`);
+      await page.close();
+    }
+  }
+});
+
+/* ------------------------------------------------------------------ */
+/* SEO and headers                                                     */
+/* ------------------------------------------------------------------ */
+test('structured data is valid JSON-LD with real facts only', async () => {
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const raw = html.match(/<script type="application\/ld\+json">(.+?)<\/script>/s)[1];
+  const ld = JSON.parse(raw);
+  const types = ld['@graph'].map((n) => n['@type']);
+  assert.deepEqual(types.sort(), ['Organization', 'SoftwareApplication', 'WebSite']);
+  assert.doesNotMatch(raw, /aggregateRating|ratingValue|reviewCount|"review"/, 'no invented ratings');
+  const app = ld['@graph'].find((n) => n['@type'] === 'SoftwareApplication');
+  assert.equal(app.offers.price, '0');
+  assert.equal(app.url, config.links.webApp);
+});
+
+test('social cards use absolute URLs', async () => {
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  for (const prop of ['og:image', 'og:url']) {
+    const v = html.match(new RegExp(`property="${prop}" content="([^"]+)"`))[1];
+    assert.match(v, /^https:\/\//, `${prop} must be absolute`);
+  }
+});
+
+test('sitemap, robots and security headers are correct', () => {
+  const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const p of PAGES) assert.ok(sitemap.includes(`<loc>${config.site.url}${p}</loc>`), `sitemap missing ${p}`);
+  const robots = readFileSync(join(ROOT, 'robots.txt'), 'utf8');
+  assert.match(robots, new RegExp(`Sitemap: ${config.site.url}/sitemap.xml`));
+  assert.match(HEADERS, /Strict-Transport-Security: max-age=\d+/);
+  assert.match(CSP, /frame-ancestors 'none'/);
+  assert.doesNotMatch(CSP, /unsafe-inline|unsafe-eval/);
+  assert.match(HEADERS, /\/static\/\*\n\s+Cache-Control: public, max-age=31536000, immutable/);
 });

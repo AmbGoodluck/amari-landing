@@ -1,0 +1,67 @@
+{
+  "$comment": "Single source of truth for brand, links, SEO and analytics. Edit here, then run `npm run build`. Empty strings switch features off.",
+
+  "brand": {
+    "name": "Amari",
+    "appName": "Ask Amari",
+    "descriptor": "Your AI Kitchen Assistant",
+    "tagline": "Snap. Discover. Cook.",
+    "pitch": "Dinner, decided, from what's already in your kitchen.",
+    "logo": "/assets/logo.svg"
+  },
+
+  "site": {
+    "url": "https://askamari.us",
+    "language": "en",
+    "locale": "en_US"
+  },
+
+  "links": {
+    "webApp": "https://app.askamari.us",
+    "signIn": "https://app.askamari.us",
+    "appStore": "",
+    "googlePlay": ""
+  },
+
+  "contact": {
+    "email": "support@askamari.us"
+  },
+
+  "social": [],
+
+  "nav": [
+    { "label": "Features", "href": "#features" },
+    { "label": "How It Works", "href": "#how-it-works" },
+    { "label": "Recipes", "href": "#recipes" },
+    { "label": "FAQ", "href": "#faq" }
+  ],
+
+  "cta": {
+    "primary": "Use Amari free on the web",
+    "nav": "Try it free",
+    "secondary": "Explore how it works",
+    "signIn": "Sign in",
+    "iosStatus": "iPhone app in testing"
+  },
+
+  "footer": {
+    "blurb": "Your AI kitchen assistant. Dinner, decided, from what's already in your kitchen.",
+    "copyrightHolder": "Amari",
+    "note": "Always check labels if you have a food allergy."
+  },
+
+  "seo": {
+    "title": "Amari | Your AI Kitchen Assistant — Snap, Discover, Cook",
+    "description": "Turn your fridge and pantry ingredients into delicious meals. Snap your ingredients, discover personalized AI recipes, and cook smarter with Amari.",
+    "ogImage": "/assets/og.jpg",
+    "ogImageAlt": "Amari: Snap. Discover. Cook. The Amari app on a phone, surrounded by fresh tomato, basil and avocado.",
+    "themeColorLight": "#FCFAF8",
+    "themeColorDark": "#0B0B0C"
+  },
+
+  "analytics": {
+    "cloudflareWebAnalytics": true,
+    "cloudflareBeaconToken": "",
+    "events": true
+  }
+}

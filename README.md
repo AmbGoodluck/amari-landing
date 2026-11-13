@@ -1,59 +1,44 @@
-# Amari — Landing Page
+# Amari: marketing website
 
-**Snap. Discover. Cook.** Marketing site for Amari, the AI kitchen assistant that turns a photo of your fridge or pantry into personalized recipes.
+**Snap. Discover. Cook.** The website for Amari ("Ask Amari"), the AI kitchen assistant: <https://askamari.us>. The app itself lives at <https://app.askamari.us>.
 
-A zero-build static site (HTML, CSS, vanilla JS) served by **Cloudflare Workers static assets**, deployed from GitHub with Workers Builds.
+A static site with no framework. A zero-dependency Node build renders every page from one config file. It is served by **Cloudflare Workers static assets**, plus a tiny Worker for first-party analytics events.
 
-## Structure
-
-```
-public/
-  index.html      # all sections: hero, how it works, features, recipes, download
-  styles.css      # design tokens, light/dark, responsive, a11y media queries
-  app.js          # springs, pointer tilt, momentum carousel, menu, reveals
-  assets/         # optimized WebP photography, favicon, OG image
-  _headers        # security headers + asset caching (CSP: self only)
-  terms.html      # generated from content/legal/terms.md
-  privacy.html    # generated from content/legal/privacy.md
-  404.html
-content/legal/        # source Markdown for /terms and /privacy
-scripts/build-legal.mjs  # zero-dependency Markdown → HTML for the legal pages
-tests/site.test.mjs   # Playwright + axe end-to-end checks
-wrangler.jsonc        # Cloudflare Workers static-assets config (assets dir: public)
-docs/superpowers/     # design spec + implementation plan
-```
-
-## Develop
+## Quick start
 
 ```bash
-npm install
-npm run dev        # wrangler dev → http://localhost:8787
-npm test           # Playwright + axe checks against ./public
-npm run build:legal  # after editing content/legal/*.md (tests fail if you forget)
+npm install          # dev tools only: wrangler, playwright, axe
+npm run build        # render public/ from site.config.json + src/ + content/
+npm test             # build check + lint + 30 Playwright/axe/unit tests
+npm run dev          # build, then serve locally on Cloudflare's runtime
 ```
 
-## Deploy (Cloudflare Workers Builds)
+## Where things live
 
-Connected to GitHub: every push to `main` builds and deploys automatically.
-
-| Setting | Value |
+| Path | What it is |
 |---|---|
-| Build command | *(empty)* |
-| Deploy command | `npx wrangler deploy` |
-| Root directory | `/` |
-| Production branch | `main` |
+| `site.config.json` | **Change brand details here:** name, tagline, links (web app, App Store, Google Play), contact email, nav, CTA labels, footer, SEO defaults, OG image, analytics switches |
+| `src/pages/index.html` | Homepage content, with `{{config.path}}` tokens filled from the config |
+| `src/styles.css` | Design system: primitive palette, brand aliases, typography scale, components. Raw colors outside the token blocks fail lint. |
+| `src/app.js` | Progressive enhancement: springs, carousel, menu, legal contents list, conversion events |
+| `content/legal/*.md` | Terms of Use and Privacy Policy, **as supplied by the owner** |
+| `content/pages/contact.md` | Contact page |
+| `scripts/build.mjs` | Build: pages, shared header/footer/head, JSON-LD, fingerprinted CSS/JS, sitemap, robots, manifest, `_headers` |
+| `scripts/lint.mjs` | Syntax, design-token, CSP and HTML hygiene checks |
+| `worker/index.js` | `/api/event` endpoint (cookieless events); everything else is static |
+| `public/` | **Generated output.** Committed, served as-is. Don't edit by hand. |
+| `tests/` | Playwright end-to-end tests plus Worker unit tests |
 
-`wrangler.jsonc` points `assets.directory` at `./public`; there is no Worker script.
-Manual deploy from a laptop: `npx wrangler login && npm run deploy`.
+Routes: `/`, `/terms`, `/privacy`, `/contact`, and a branded `404`.
 
-## Design notes
+## Common changes
 
-Built to Apple's interface guidelines, translated to the web:
+- **Store links when the apps launch:** set `links.appStore` / `links.googlePlay` in `site.config.json`, add the badges to `src/pages/index.html`, and remove the "no app-store links" test.
+- **Legal text:** edit `content/legal/*.md`, then run `npm run build`.
+- **Brand color:** change the primitives at the top of `src/styles.css`.
 
-- **Type** — system font stack (SF Pro on Apple devices), size-specific tracking (display −0.045em, body ≈0), tight leading on display, `rem` sizing so text scaling never breaks layout.
-- **Materials** — the nav becomes a translucent `backdrop-filter` layer only once content scrolls under it; heart buttons on photos use the same material.
-- **Motion** — a velocity-aware, interruptible spring drives everything touchable. The recipe carousel tracks the pointer 1:1, projects flicks forward (`v/1000 · d/(1−d)`, d = 0.998), rubber-bands at the ends, and can be grabbed mid-flight. Press feedback is on pointer-down.
-- **Accessibility** — semantic landmarks, skip link, visible focus rings, keyboard-operable carousel, live region for carousel position; honors `prefers-reduced-motion`, `prefers-reduced-transparency`, `prefers-contrast: more`, `forced-colors`, and light/dark.
-- **Responsibility** — allergy-aware messaging with a reminder to always check labels.
+Always run `npm run build` and commit `public/`. `npm test` fails if `public/` is stale.
 
-Store badges link to `#download` until the App Store and Google Play listings are live.
+## Docs
+
+[PROJECT_AUDIT.md](PROJECT_AUDIT.md) · [DEPLOYMENT.md](DEPLOYMENT.md) · [ENVIRONMENT_VARIABLES.md](ENVIRONMENT_VARIABLES.md) · [SECURITY.md](SECURITY.md) · [SEO.md](SEO.md) · [PERFORMANCE.md](PERFORMANCE.md) · [ACCESSIBILITY.md](ACCESSIBILITY.md) · [TEST_REPORT.md](TEST_REPORT.md)

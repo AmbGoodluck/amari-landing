@@ -384,6 +384,49 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+     First-party conversion events (see worker/index.js).
+     Cookieless, no identifiers, no form content. Respects Global Privacy
+     Control and Do Not Track. Analytics failures never affect the page.
+  ------------------------------------------------------------------ */
+  const optedOut = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1';
+  if (root.dataset.events === 'on' && !optedOut) {
+    const slug = (s) => String(s || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+    const pagePath = () => (location.pathname.toLowerCase().replace(/[^a-z0-9/_-]/g, '').slice(0, 65) || '/');
+    const send = (e, l = '') => {
+      try {
+        const body = JSON.stringify({ e, l: slug(l), p: pagePath() });
+        const blob = new Blob([body], { type: 'text/plain' });
+        if (!(navigator.sendBeacon && navigator.sendBeacon('/api/event', blob))) {
+          fetch('/api/event', { method: 'POST', body, headers: { 'content-type': 'text/plain' }, keepalive: true, credentials: 'omit' }).catch(() => {});
+        }
+      } catch { /* never let analytics break the page */ }
+    };
+
+    document.addEventListener('click', (e) => {
+      const el = e.target instanceof Element ? e.target.closest('[data-track]') : null;
+      if (el) send(el.getAttribute('data-track'), el.textContent);
+    });
+
+    // FAQ: <details> "toggle" doesn't bubble, so listen in the capture phase.
+    document.addEventListener('toggle', (e) => {
+      const d = e.target;
+      if (d instanceof HTMLDetailsElement && d.open && d.hasAttribute('data-track-faq')) send('faq_open', d.querySelector('summary')?.textContent);
+    }, true);
+
+    // Section engagement: once per section per page view, when half visible.
+    if ('IntersectionObserver' in window) {
+      const seen = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          send('section_view', entry.target.getAttribute('data-track-view'));
+          seen.unobserve(entry.target);
+        }
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-track-view]').forEach((el) => seen.observe(el));
+    }
+  }
+
   /* Footer year. */
   const year = document.querySelector('[data-year]');
   if (year) year.textContent = String(new Date().getFullYear());

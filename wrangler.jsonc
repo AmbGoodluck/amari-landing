@@ -2,11 +2,17 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "amari-landing",
   "compatibility_date": "2026-10-01",
-  // Static site served by Cloudflare Workers static assets (Workers Builds
-  // runs `npx wrangler deploy`). No Worker script — just the files in ./public.
-  // _headers and 404.html in ./public are honoured automatically.
+  // Tiny Worker for /api/* only (first-party analytics events). Everything
+  // else is served directly from ./public by Workers static assets.
+  "main": "worker/index.js",
   "assets": {
     "directory": "./public",
-    "not_found_handling": "404-page"
-  }
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  // Workers Logs: where events go until an Analytics Engine dataset is bound.
+  "observability": { "enabled": true }
+  // To store events in Workers Analytics Engine instead, add:
+  // "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "amari_site_events" }]
 }

@@ -1,10 +1,24 @@
 {
-  "name": "Amari — AI Kitchen Assistant",
+  "name": "Amari — Your AI Kitchen Assistant",
   "short_name": "Amari",
+  "description": "Turn your fridge and pantry ingredients into delicious meals. Snap your ingredients, discover personalized AI recipes, and cook smarter with Amari.",
+  "start_url": "/",
   "icons": [
-    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/assets/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
   ],
   "theme_color": "#155E3B",
   "background_color": "#FFF4E2",

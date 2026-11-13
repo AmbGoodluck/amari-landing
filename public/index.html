@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-events="on">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Amari — Snap. Discover. Cook. | AI Kitchen Assistant</title>
-  <meta name="description" content="Turn what you already have into delicious meals. Snap your fridge or pantry and Amari instantly creates personalized recipes for you.">
+  <title>Amari | Your AI Kitchen Assistant — Snap, Discover, Cook</title>
+  <meta name="description" content="Turn your fridge and pantry ingredients into delicious meals. Snap your ingredients, discover personalized AI recipes, and cook smarter with Amari.">
+  <link rel="canonical" href="https://askamari.us/">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#FCFAF8" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
@@ -14,47 +15,56 @@
   <link rel="manifest" href="/site.webmanifest">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Amari — Snap. Discover. Cook.">
-  <meta property="og:description" content="Snap your fridge or pantry and Amari instantly creates personalized recipes from what you already have.">
-  <meta property="og:image" content="/assets/og.jpg">
+  <meta property="og:site_name" content="Amari">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Amari | Your AI Kitchen Assistant — Snap, Discover, Cook">
+  <meta property="og:description" content="Turn your fridge and pantry ingredients into delicious meals. Snap your ingredients, discover personalized AI recipes, and cook smarter with Amari.">
+  <meta property="og:url" content="https://askamari.us/">
+  <meta property="og:image" content="https://askamari.us/assets/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Amari: Snap. Discover. Cook. The Amari app on a phone, surrounded by fresh tomato, basil and avocado.">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Amari | Your AI Kitchen Assistant — Snap, Discover, Cook">
+  <meta name="twitter:description" content="Turn your fridge and pantry ingredients into delicious meals. Snap your ingredients, discover personalized AI recipes, and cook smarter with Amari.">
+  <meta name="twitter:image" content="https://askamari.us/assets/og.jpg">
 
-  <link rel="preload" href="/assets/jollof.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
+  <link rel="stylesheet" href="/static/styles.9a6ab8c472.css">
+  <script src="/static/app.ff9d04169b.js" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://askamari.us/#organization","name":"Amari","url":"https://askamari.us/","logo":"https://askamari.us/assets/icon-512.png","email":"support@askamari.us","sameAs":[]},{"@type":"WebSite","@id":"https://askamari.us/#website","name":"Amari","url":"https://askamari.us/","inLanguage":"en","description":"Turn your fridge and pantry ingredients into delicious meals. Snap your ingredients, discover personalized AI recipes, and cook smarter with Amari.","publisher":{"@id":"https://askamari.us/#organization"}},{"@type":"SoftwareApplication","@id":"https://askamari.us/#app","name":"Ask Amari","url":"https://app.askamari.us","description":"Snap your fridge, and Amari shows every meal you can make tonight, checked against your allergies and diet. Ask Amari anything about cooking with what you have.","applicationCategory":"LifestyleApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://askamari.us/#organization"}}]}</script>
 </head>
 <body>
-  <!-- Icon sprite: stroke icons inherit currentColor -->
-  <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="logo" viewBox="0 0 1024 1024"><circle cx="407.5" cy="487.5" r="123.5" fill="#E4572E"/><path fill="#2E9B5A" d="M535 542C522 400 590 272 752 232C778 350 735 490 535 542Z"/><path fill="#155E3B" d="M160 540H864A352 352 0 0 1 160 540Z"/></symbol>
-      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5 13.7 9a2 2 0 0 0 1.3 1.3l5.5 1.7-5.5 1.7a2 2 0 0 0-1.3 1.3L12 20.5 10.3 15A2 2 0 0 0 9 13.7L3.5 12 9 10.3A2 2 0 0 0 10.3 9L12 3.5Z"/><path d="M19 3v3M17.5 4.5h3M5 17v3M3.5 18.5h3"/></symbol>
-      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12l1-8Z"/></symbol>
-      <symbol id="i-utensils" viewBox="0 0 24 24"><path d="M6 3v7a2 2 0 0 0 2 2v9M10 3v7a2 2 0 0 1-2 2M8 3v5"/><path d="M17 21V3c-2.2 1.2-3.5 3.7-3.5 7v3H17"/></symbol>
-      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4.5 19.5C4 11 9.5 5 20 4.5c.5 10.5-5.5 16-14 15.5"/><path d="M4.5 19.5 14 10"/></symbol>
-      <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3.5 8.5a2 2 0 0 1 2-2h2.2l1.6-2.2h5.4l1.6 2.2h2.2a2 2 0 0 1 2 2v9.2a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V8.5Z"/><circle cx="12" cy="12.8" r="3.6"/></symbol>
-      <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M10 4 11.6 9a2 2 0 0 0 1.4 1.4L18 12l-5 1.6a2 2 0 0 0-1.4 1.4L10 20l-1.6-5A2 2 0 0 0 7 13.6L2 12l5-1.6A2 2 0 0 0 8.4 9L10 4Z"/><path d="M18.5 2.5 19.2 4.8 21.5 5.5 19.2 6.2 18.5 8.5 17.8 6.2 15.5 5.5 17.8 4.8Z"/></symbol>
-      <symbol id="i-pot" viewBox="0 0 24 24"><path d="M4 10h16v6.5a3.5 3.5 0 0 1-3.5 3.5h-9A3.5 3.5 0 0 1 4 16.5V10Z"/><path d="M2 10h20M9 6.5h6M12 6.5V4.5"/></symbol>
-      <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 5.5 6.5 6.5L9 18.5"/></symbol>
-      <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 5.5 8.5 12l6.5 6.5"/></symbol>
-      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></symbol>
-      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.4-7.5-10.1A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 7.5 2.7C19.5 15.6 12 20 12 20Z"/></symbol>
-      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
-      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
-      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.5 3 8 7 9.5 4-1.5 7-5 7-9.5V6l-7-3Z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
-      <symbol id="i-box" viewBox="0 0 24 24"><path d="M4 7.5 12 3.5l8 4v9L12 20.5l-8-4v-9Z"/><path d="m4 7.5 8 4 8-4M12 11.5v9"/></symbol>
-      <symbol id="i-steps" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.75" cy="6.5" r="1.25"/><circle cx="4.75" cy="12" r="1.25"/><circle cx="4.75" cy="17.5" r="1.25"/></symbol>
-      <symbol id="i-recycle" viewBox="0 0 24 24"><path d="M7 19H4.8a1.8 1.8 0 0 1-1.5-2.7L5 13.4M17 19h2.2a1.8 1.8 0 0 0 1.5-2.7l-1.6-2.8M9.3 5.6l1.1-1.9a1.8 1.8 0 0 1 3.2 0l1.6 2.8"/><path d="m7 16-2-2.6-3 .5M17 16l2-2.6 3 .5M15.2 6.5l-.4 3.2-3-.9M7 19h10"/></symbol>
-      <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
-      <symbol id="i-apple" viewBox="0 0 24 24"><path stroke="none" fill="currentColor" d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.8 1.2 1.8 2.6 3.1 2.6 1.3-.1 1.7-.8 3.3-.8 1.5 0 1.9.8 3.3.8 1.4 0 2.2-1.2 3-2.5.9-1.4 1.3-2.8 1.4-2.8-.1 0-2.7-1-2.4-4.2ZM13.9 5c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5Z"/></symbol>
-    </defs>
-  </svg>
-
+  <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+    <symbol id="logo" viewBox="0 0 1024 1024"><circle cx="407.5" cy="487.5" r="123.5" fill="#E4572E"/><path fill="#2E9B5A" d="M535 542C522 400 590 272 752 232C778 350 735 490 535 542Z"/><path fill="#155E3B" d="M160 540H864A352 352 0 0 1 160 540Z"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5 13.7 9a2 2 0 0 0 1.3 1.3l5.5 1.7-5.5 1.7a2 2 0 0 0-1.3 1.3L12 20.5 10.3 15A2 2 0 0 0 9 13.7L3.5 12 9 10.3A2 2 0 0 0 10.3 9L12 3.5Z"/><path d="M19 3v3M17.5 4.5h3M5 17v3M3.5 18.5h3"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12l1-8Z"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4.5 19.5C4 11 9.5 5 20 4.5c.5 10.5-5.5 16-14 15.5"/><path d="M4.5 19.5 14 10"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3.5 8.5a2 2 0 0 1 2-2h2.2l1.6-2.2h5.4l1.6 2.2h2.2a2 2 0 0 1 2 2v9.2a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V8.5Z"/><circle cx="12" cy="12.8" r="3.6"/></symbol>
+    <symbol id="i-camera-off" viewBox="0 0 24 24"><path d="M3.5 8.5a2 2 0 0 1 2-2h2.2l1.6-2.2h5.4l1.6 2.2h2.2a2 2 0 0 1 2 2v9.2a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V8.5Z"/><path d="m4 4 16 16"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M10 4 11.6 9a2 2 0 0 0 1.4 1.4L18 12l-5 1.6a2 2 0 0 0-1.4 1.4L10 20l-1.6-5A2 2 0 0 0 7 13.6L2 12l5-1.6A2 2 0 0 0 8.4 9L10 4Z"/><path d="M18.5 2.5 19.2 4.8 21.5 5.5 19.2 6.2 18.5 8.5 17.8 6.2 15.5 5.5 17.8 4.8Z"/></symbol>
+    <symbol id="i-pot" viewBox="0 0 24 24"><path d="M4 10h16v6.5a3.5 3.5 0 0 1-3.5 3.5h-9A3.5 3.5 0 0 1 4 16.5V10Z"/><path d="M2 10h20M9 6.5h6M12 6.5V4.5"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 5.5 6.5 6.5L9 18.5"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 5.5 8.5 12l6.5 6.5"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.4-7.5-10.1A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 7.5 2.7C19.5 15.6 12 20 12 20Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.5 3 8 7 9.5 4-1.5 7-5 7-9.5V6l-7-3Z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="M4 7.5 12 3.5l8 4v9L12 20.5l-8-4v-9Z"/><path d="m4 7.5 8 4 8-4M12 11.5v9"/></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.75" cy="6.5" r="1.25"/><circle cx="4.75" cy="12" r="1.25"/><circle cx="4.75" cy="17.5" r="1.25"/></symbol>
+    <symbol id="i-recycle" viewBox="0 0 24 24"><path d="M7 19H4.8a1.8 1.8 0 0 1-1.5-2.7L5 13.4M17 19h2.2a1.8 1.8 0 0 0 1.5-2.7l-1.6-2.8M9.3 5.6l1.1-1.9a1.8 1.8 0 0 1 3.2 0l1.6 2.8"/><path d="m7 16-2-2.6-3 .5M17 16l2-2.6 3 .5M15.2 6.5l-.4 3.2-3-.9M7 19h10"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16.5" height="11.5" rx="2.5"/><path d="M16 14h1.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.2 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.2-3.5-8.5S9.6 5.9 12 3.5Z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 12s3.3-6 9-6c1.6 0 3 .4 4.2 1.1M21 12s-3.3 6-9 6c-1.6 0-3-.4-4.2-1.1"/><path d="m4 4 16 16"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/></symbol>
+  </defs></svg>
   <a class="skip-link" href="#main">Skip to content</a>
-
   <header class="site-header" data-header>
     <div class="container nav">
       <a class="brand" href="#top" aria-label="Amari home">
@@ -64,14 +74,14 @@
 
       <nav id="nav-menu" class="nav-menu" aria-label="Primary">
         <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#how-it-works">How It Works</a></li>
-          <li><a href="#recipes">Recipes</a></li>
-          <li><a href="#download">Download</a></li>
+          <li><a href="#features" data-track="nav_link">Features</a></li>
+          <li><a href="#how-it-works" data-track="nav_link">How It Works</a></li>
+          <li><a href="#recipes" data-track="nav_link">Recipes</a></li>
+          <li><a href="#faq" data-track="nav_link">FAQ</a></li>
         </ul>
         <div class="nav-actions">
-          <a class="btn btn-primary btn-sm" href="#download"><svg class="ico" aria-hidden="true"><use href="#i-apple"/></svg>Get the App</a>
-          <a class="btn btn-secondary btn-sm" href="#download">Sign In</a>
+          <a class="btn btn-primary btn-sm" href="https://app.askamari.us" data-track="nav_cta">Try it free</a>
+          <a class="btn btn-secondary btn-sm" href="https://app.askamari.us" data-track="nav_signin">Sign in</a>
         </div>
       </nav>
 
@@ -83,47 +93,37 @@
 
   <main id="main" tabindex="-1">
     <!-- ───────── Hero ───────── -->
-    <section class="hero" id="top" aria-labelledby="hero-title">
+    <section class="hero" id="top" aria-labelledby="hero-title" data-track-view="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow"><svg class="ico" aria-hidden="true"><use href="#i-sparkle"/></svg>AI Kitchen Assistant</p>
+          <p class="eyebrow"><svg class="ico" aria-hidden="true"><use href="#i-sparkle"/></svg>Your AI Kitchen Assistant</p>
           <h1 id="hero-title" class="display">
             <span class="display-line">Snap. Discover.</span>
             <span class="display-line accent-text">Cook.</span>
           </h1>
-          <p class="lede">Turn what you already have into delicious meals. Snap your fridge or pantry, and Amari instantly creates personalized recipes for you.</p>
+          <p class="lede"><strong>Dinner, decided.</strong> Snap your fridge or pantry, and Amari instantly shows every meal you can make tonight, with personalized recipes using your ingredients, checked against your allergies and diet.</p>
 
-          <div class="store-badges">
-            <a class="store-badge store-badge--dark" href="#download">
-              <svg class="store-icon" aria-hidden="true"><use href="#i-apple"/></svg>
-              <span><small>Download on the</small><strong>App Store</strong></span>
-            </a>
-            <a class="store-badge store-badge--light" href="#download">
-              <svg class="store-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#00D7FE" d="M3.6 2.3 13.5 12l-9.9 9.7c-.4-.2-.6-.7-.6-1.2V3.5c0-.5.2-1 .6-1.2Z"/>
-                <path fill="#00F076" d="m16.9 8.6-3.4 3.4-9.9-9.7c.3-.2.8-.2 1.2 0l12.1 6.3Z"/>
-                <path fill="#FFC900" d="M20.5 10.5c.9.5.9 2.5 0 3l-3.6 1.9-3.4-3.4 3.4-3.4 3.6 1.9Z"/>
-                <path fill="#FF3A44" d="M16.9 15.4 4.8 21.7c-.4.2-.9.2-1.2 0l9.9-9.7 3.4 3.4Z"/>
-              </svg>
-              <span><small>Get it on</small><strong>Google Play</strong></span>
-            </a>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="https://app.askamari.us" data-track="hero_cta">Use Amari free on the web<svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+            <a class="btn btn-secondary btn-lg" href="#how-it-works" data-track="hero_secondary">Explore how it works</a>
           </div>
+          <p class="hero-note">Free for everyone right now · No account needed to start · <span class="status status--soon">iPhone app in testing</span></p>
 
           <ul class="value-props" aria-label="Why Amari">
-            <li><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><span>Instant<br>meal ideas</span></li>
-            <li><svg class="ico" aria-hidden="true"><use href="#i-utensils"/></svg><span>Uses your<br>ingredients</span></li>
-            <li><svg class="ico" aria-hidden="true"><use href="#i-leaf"/></svg><span>Smart, healthy<br>choices</span></li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><span>Meals you<br>can make now</span></li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg><span>Your diet<br>rules, always</span></li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-leaf"/></svg><span>Private<br>by design</span></li>
           </ul>
         </div>
 
         <div class="hero-visual" data-tilt-scope>
           <div class="hero-backdrop" aria-hidden="true"></div>
-          <img class="produce produce--tomato" data-depth="1.4" src="/assets/tomato.webp" width="333" height="360" alt="" fetchpriority="high">
-          <img class="produce produce--basil" data-depth="1.1" src="/assets/basil.webp" width="320" height="258" alt="">
-          <img class="produce produce--avocado" data-depth="1.6" src="/assets/avocado.webp" width="502" height="520" alt="">
+          <img class="produce produce--tomato" data-depth="1.4" src="/assets/tomato.webp" srcset="/assets/tomato-180.webp 180w, /assets/tomato.webp 333w" sizes="(max-width: 960px) 7rem, 9.5rem" width="333" height="360" alt="" fetchpriority="high">
+          <img class="produce produce--basil" data-depth="1.1" src="/assets/basil.webp" srcset="/assets/basil-170.webp 170w, /assets/basil.webp 320w" sizes="(max-width: 960px) 6.5rem, 8.5rem" width="320" height="258" alt="" decoding="async">
+          <img class="produce produce--avocado" data-depth="1.6" src="/assets/avocado.webp" srcset="/assets/avocado-260.webp 260w, /assets/avocado.webp 502w" sizes="(max-width: 960px) 10rem, 13rem" width="502" height="520" alt="" decoding="async">
 
           <div class="phone-stage" data-tilt>
-            <div class="phone" role="img" aria-label="The Amari app home screen: a “Snap Your Ingredients” card and a meal idea, Jollof Rice with Chicken, ready in 25 minutes using 7 of your ingredients.">
+            <div class="phone" role="img" aria-label="The Amari app home screen: a “Snap Your Ingredients” card and a meal idea, Jollof Rice with Chicken, ready in 50 minutes using 7 of your ingredients.">
               <div class="phone-screen">
                 <div class="phone-status">
                   <span class="phone-time">9:41</span>
@@ -148,124 +148,173 @@
                 <div class="app-meals">
                   <div class="app-meal">
                     <div class="app-meal-img">
-                      <img src="/assets/jollof.webp" width="720" height="542" alt="">
+                      <img src="/assets/jollof-360.webp" width="360" height="271" alt="">
                       <span class="app-heart"><svg class="ico"><use href="#i-heart"/></svg></span>
-                      <span class="app-time">25 min</span>
+                      <span class="app-time">50 min</span>
                     </div>
                     <p class="app-meal-title">Jollof Rice with Chicken</p>
                     <p class="app-meal-sub"><b>Using 7</b> of your ingredients</p>
                   </div>
                   <div class="app-meal app-meal--peek">
-                    <div class="app-meal-img"><img src="/assets/shakshuka.webp" width="720" height="542" alt=""></div>
+                    <div class="app-meal-img"><img src="/assets/shakshuka-360.webp" width="360" height="271" alt=""></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
     <!-- ───────── How it works ───────── -->
-    <section class="steps-section" id="how-it-works" aria-labelledby="steps-title">
+    <section class="steps-section" id="how-it-works" aria-labelledby="steps-title" data-track-view="how_it_works">
       <div class="container">
         <h2 id="steps-title" class="visually-hidden">How it works</h2>
         <ol class="steps reveal">
           <li class="step">
             <span class="step-icon"><svg class="ico" aria-hidden="true"><use href="#i-camera"/></svg></span>
-            <div><h3>Snap &amp; Scan</h3><p>Take a photo of what you have in your fridge or pantry.</p></div>
+            <div><p class="step-num">Step 1</p><h3>Snap your ingredients</h3><p>Photograph your fridge or cupboard. Amari lists what it sees, and you fix anything it missed.</p></div>
           </li>
           <li class="step">
             <span class="step-icon"><svg class="ico" aria-hidden="true"><use href="#i-sparkles"/></svg></span>
-            <div><h3>Get Meal Ideas</h3><p>Amari’s AI finds the best recipes with what you already have.</p></div>
+            <div><p class="step-num">Step 2</p><h3>Discover personalized meals</h3><p>See everything you can make now, then the dishes you’re one ingredient away from.</p></div>
           </li>
           <li class="step">
             <span class="step-icon"><svg class="ico" aria-hidden="true"><use href="#i-pot"/></svg></span>
-            <div><h3>Cook &amp; Enjoy</h3><p>Follow simple, step-by-step instructions and cook with confidence.</p></div>
+            <div><p class="step-num">Step 3</p><h3>Cook with step-by-step guidance</h3><p>Big, clear steps and built-in timers that keep running even when your phone is locked.</p></div>
           </li>
         </ol>
       </div>
     </section>
 
+    <!-- ───────── Ask Amari ───────── -->
+    <section class="section" id="ask-amari" aria-labelledby="ask-title" data-track-view="ask_amari">
+      <div class="container split">
+        <div class="split-copy reveal">
+          <p class="kicker">Ask Amari</p>
+          <h2 id="ask-title" class="h2">Your AI cook, who knows your kitchen.</h2>
+          <p class="section-lede">Ask Amari knows what’s in your fridge, your allergies, your tastes, how much time you have and how many you’re feeding, so its answers fit your night, not a generic one.</p>
+          <ul class="check-list">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>“What can I make in 20 minutes?” “What can I use instead of buttermilk?” “Use up my spinach.”</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Writes a new recipe, with a photo, when the collection doesn’t have the dish you want.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Every answer is checked against your allergies and diets, with a warning if anything conflicts.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Remembers your dislikes and adds missing items to your shopping list.</li>
+          </ul>
+        </div>
+        <figure class="chat reveal" aria-labelledby="chat-caption">
+          <div class="chat-window" aria-hidden="true">
+            <div class="chat-head"><span class="brand-mark brand-mark--sm"><svg><use href="#logo"/></svg></span><span>Ask Amari</span></div>
+            <p class="bubble bubble--me">What can I make in 20 minutes?</p>
+            <div class="bubble bubble--amari">
+              <p>You have eggs, spinach, feta and tortillas. A spinach and feta quesadilla takes about 15 minutes and fits your vegetarian diet.</p>
+              <div class="chat-card"><img src="/assets/avocado-toast-360.webp" width="360" height="271" alt="" loading="lazy" decoding="async"><div><b>Spinach &amp; Feta Quesadilla</b><span>15 min · Vegetarian · Uses 4 of your ingredients</span></div></div>
+            </div>
+            <p class="bubble bubble--me">I’m out of buttermilk.</p>
+            <p class="bubble bubble--amari">Stir 1 tablespoon of lemon juice into 1 cup of milk and let it stand for 5 minutes.</p>
+          </div>
+          <figcaption id="chat-caption" class="figure-note">Illustration of a conversation. Real answers depend on your kitchen and settings.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ───────── Your rules ───────── -->
+    <section class="section section--tint" id="your-rules" aria-labelledby="rules-title" data-track-view="your_rules">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="kicker">Your rules, always</p>
+          <h2 id="rules-title" class="h2">Checked against every ingredient, every time.</h2>
+          <p class="section-lede">Allergies and diets are hard rules, not suggestions. Every ingredient in every recipe is checked against them by fixed logic, not AI guesswork, and Ask Amari’s answers are checked against the same rules.</p>
+        </header>
+        <div class="rules reveal">
+          <div class="rules-group">
+            <h3>9 major allergens</h3>
+            <ul class="chips">
+              <li class="chip">Milk or dairy</li><li class="chip">Egg</li><li class="chip">Peanut</li><li class="chip">Tree nuts</li><li class="chip">Wheat</li><li class="chip">Soy</li><li class="chip">Fish</li><li class="chip">Shellfish</li><li class="chip">Sesame</li>
+            </ul>
+          </div>
+          <div class="rules-group">
+            <h3>7 diets</h3>
+            <ul class="chips">
+              <li class="chip">Vegetarian</li><li class="chip">Vegan</li><li class="chip">Pescatarian</li><li class="chip">Gluten-free</li><li class="chip">Halal</li><li class="chip">No pork</li><li class="chip">No beef</li>
+            </ul>
+          </div>
+          <div class="rules-group">
+            <h3>Plus your avoid list</h3>
+            <p>Anything else you don’t eat, from cilantro to mushrooms.</p>
+          </div>
+        </div>
+        <p class="notice reveal"><svg class="ico" aria-hidden="true"><use href="#i-info"/></svg><span><strong>A guide, not a guarantee.</strong> Recipes and products vary. Always read labels, especially for allergens and cross-contamination warnings, and don’t rely on Amari alone if you have a severe allergy. <a href="/terms#6-food-allergies-and-safety">Food, allergies and safety</a></span></p>
+      </div>
+    </section>
+
     <!-- ───────── Features ───────── -->
-    <section class="section" id="features" aria-labelledby="features-title">
+    <section class="section" id="features" aria-labelledby="features-title" data-track-view="features">
       <div class="container">
         <header class="section-head reveal">
           <p class="kicker">Features</p>
           <h2 id="features-title" class="h2">Everything you need to cook with what you’ve got.</h2>
-          <p class="section-lede">Amari sees your ingredients, understands how you eat, and walks you to dinner — one calm step at a time.</p>
+          <p class="section-lede">Every feature below works in Amari today. The iPhone app is in testing; until it launches, everything runs in your browser.</p>
         </header>
-
-        <div class="bento">
-          <article class="tile tile--wide reveal">
-            <span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-camera"/></svg></span>
-            <h3>Sees what you’ve got</h3>
-            <p>Point your camera at a shelf, a counter or a grocery bag. Amari recognizes ingredients in a single snap — no typing lists.</p>
-            <ul class="chips" aria-label="Example of detected ingredients">
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Tomatoes</li>
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Avocado</li>
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Basil</li>
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Chicken thighs</li>
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Long-grain rice</li>
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Red onion</li>
-              <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Scotch bonnet</li>
-            </ul>
-          </article>
-
+        <div class="feature-grid">
           <article class="tile reveal">
-            <span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg></span>
-            <h3>Made for how you eat</h3>
-            <p>Set your diet and allergies once. Amari keeps them in mind and flags anything you’ve asked it to avoid.</p>
-            <ul class="toggles" aria-label="Example dietary preferences">
-              <li><span>Vegetarian</span><span class="switch" aria-hidden="true"></span></li>
-              <li><span>Nut-free</span><span class="switch is-on" aria-hidden="true"></span></li>
-              <li><span>Halal</span><span class="switch is-on" aria-hidden="true"></span></li>
-            </ul>
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-camera"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Smart ingredient recognition</h3>
+            <p>Take one or more photos of your fridge or cupboard and Amari lists the food it sees.</p>
+            <ul class="tile-list"><li>Quick review to confirm, fix or remove anything</li><li>Add ingredients by hand, no photo needed</li><li>Try it first with a sample fridge</li></ul>
           </article>
-
           <article class="tile reveal">
-            <span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-steps"/></svg></span>
-            <h3>Cook mode</h3>
-            <p>Big, clear steps with built-in timers. Your screen stays awake while your hands are busy.</p>
-            <div class="cook-mode" aria-hidden="true">
-              <div class="cook-progress"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i></div>
-              <p class="cook-step">Step 3 of 5</p>
-              <p class="cook-text">Simmer the tomato base until it darkens.</p>
-              <p class="cook-timer"><svg class="ico"><use href="#i-clock"/></svg>08:00</p>
-            </div>
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-sparkles"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Personalized recipes</h3>
+            <p>Every meal you can make now, ranked by your tastes, time and skill. Amari learns from what you cook, save, rate and skip.</p>
+            <ul class="tile-list"><li>Ask Amari writes a recipe when the collection doesn’t have it</li><li>Smart swaps for missing ingredients that respect your diet</li></ul>
           </article>
-
           <article class="tile reveal">
-            <span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-box"/></svg></span>
-            <h3>A pantry that remembers</h3>
-            <p>Every snap updates your kitchen inventory, so ideas stay fresh even when you’re at the store. Save favorites and share them with whoever’s cooking tonight.</p>
-            <ul class="meters" aria-label="Example pantry levels">
-              <li><span>Eggs</span><span class="meter meter--50" aria-hidden="true"></span><span class="meter-val">6 left</span></li>
-              <li><span>Rice</span><span class="meter meter--80" aria-hidden="true"></span><span class="meter-val">Plenty</span></li>
-              <li><span>Olive oil</span><span class="meter meter--low meter--15" aria-hidden="true"></span><span class="meter-val">Running low</span></li>
-            </ul>
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-box"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Pantry and fridge, organised</h3>
+            <p>Everything you have, grouped by category, kept on your device and available offline.</p>
+            <ul class="tile-list"><li>Use-soon reminders for food that won’t last</li><li>Updates every time you scan or cook</li></ul>
           </article>
-
           <article class="tile reveal">
-            <span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-recycle"/></svg></span>
-            <h3>Waste less</h3>
-            <p>Recipes that use up what you already bought — especially the things that won’t keep much longer.</p>
-            <ul class="use-first" aria-label="Example: ingredients to use first">
-              <li><span class="dot dot--now" aria-hidden="true"></span>Spinach<span class="when">Use today</span></li>
-              <li><span class="dot dot--soon" aria-hidden="true"></span>Ripe avocado<span class="when">1 day</span></li>
-              <li><span class="dot" aria-hidden="true"></span>Bell peppers<span class="when">3 days</span></li>
-            </ul>
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-steps"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Step-by-step cooking</h3>
+            <p>Cook mode gives you big, hands-free-friendly steps with the ingredient list one tap away.</p>
+            <ul class="tile-list"><li>Timers keep running when you switch screens or lock your phone</li><li>Scales to your household size</li></ul>
+          </article>
+          <article class="tile reveal">
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Meal planning and shopping</h3>
+            <p>Plan the week around what you have, or let weekly autopilot plan it in one tap.</p>
+            <ul class="tile-list"><li>Swap any night for another idea</li><li>Shopping list from your plan, minus what you have, grouped by aisle</li><li>Send your list to Instacart, or open Walmart and Target links</li></ul>
+          </article>
+          <article class="tile reveal">
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Dietary preferences</h3>
+            <p>Set allergies, diets and foods you avoid once. Every suggestion respects them.</p>
+            <ul class="tile-list"><li>9 major allergens and 7 diets</li><li>An avoid list for anything else</li></ul>
+          </article>
+          <article class="tile reveal">
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-recycle"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Less food waste</h3>
+            <p>Amari starts with what you already have and nudges you to use food before it goes off.</p>
+            <ul class="tile-list"><li>Use-soon alerts for food about to turn</li><li>Suggestions that use up what’s open first</li></ul>
+          </article>
+          <article class="tile reveal">
+            <div class="tile-top"><span class="tile-icon"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg></span><span class="status status--live">Available now</span></div>
+            <h3>Time- and ingredient-based ideas</h3>
+            <p>See what’s ready now, then what’s one or two ingredients away, with the missing items named.</p>
+            <ul class="tile-list"><li>Filter by cooking time, meal and cuisine</li><li>230 recipes ready in 30 minutes or less</li></ul>
           </article>
         </div>
       </div>
     </section>
 
     <!-- ───────── Recipes ───────── -->
-    <section class="section section--tint" id="recipes" aria-labelledby="recipes-title">
+    <section class="section section--tint" id="recipes" aria-labelledby="recipes-title" data-track-view="recipes">
       <div class="container">
         <header class="section-head section-head--row reveal">
           <div>
-            <p class="kicker">Recipes</p>
+            <p class="kicker">Food from everywhere</p>
             <h2 id="recipes-title" class="h2">Dinner, from what’s<br class="br-wide"> already in your fridge.</h2>
           </div>
           <div class="carousel-controls">
@@ -273,62 +322,103 @@
             <button class="round-btn carousel-next" type="button" aria-label="Next recipes" aria-controls="recipe-track"><svg class="ico" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
           </div>
         </header>
+        <dl class="stats reveal">
+          <div><dt>Recipes in the collection</dt><dd>435</dd></div>
+          <div><dt>World cuisine groups</dt><dd>8</dd></div>
+          <div><dt>Ready in 30 minutes or less</dt><dd>230</dd></div>
+        </dl>
       </div>
 
       <div class="carousel" data-carousel>
-        <div class="carousel-viewport" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Recipe ideas. Use the arrow keys to browse.">
+        <div class="carousel-viewport" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Example dishes. Use the arrow keys to browse.">
           <ul class="carousel-track" id="recipe-track">
             <li class="recipe-card">
-              <div class="recipe-img"><img src="/assets/jollof.webp" width="720" height="542" alt="Jollof rice topped with a roasted chicken leg" loading="lazy" draggable="false"></div>
+              <div class="recipe-img"><img src="/assets/jollof.webp" srcset="/assets/jollof-480.webp 480w, /assets/jollof.webp 720w" sizes="(max-width: 640px) 16.5rem, 21rem" width="720" height="542" alt="Jollof rice topped with a roasted chicken leg" loading="lazy" decoding="async" draggable="false"></div>
               <div class="recipe-body">
-                <p class="recipe-meta"><span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>25 min</span><span class="tag">High protein</span></p>
+                <p class="recipe-cuisine">African &amp; Caribbean</p>
                 <h3>Jollof Rice with Chicken</h3>
-                <p class="recipe-uses"><b>Uses 7</b> of your ingredients</p>
+                <p class="recipe-desc">Smoky tomato-pepper rice with tender roast chicken.</p>
+                <dl class="recipe-facts">
+                  <div><dt>Time</dt><dd><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>50 min</dd></div>
+                  <div><dt>Difficulty</dt><dd>Medium</dd></div>
+                  <div><dt>Ingredients</dt><dd>12</dd></div>
+                </dl>
+                <ul class="recipe-tags" aria-label="Dietary tags"><li class="tag">Gluten-free</li><li class="tag">Dairy-free</li></ul>
               </div>
               <button class="heart-btn" type="button" aria-pressed="false" aria-label="Save Jollof Rice with Chicken"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button>
             </li>
             <li class="recipe-card">
-              <div class="recipe-img"><img src="/assets/shakshuka.webp" width="720" height="542" alt="Shakshuka with eggs in a cast-iron pan" loading="lazy" draggable="false"></div>
+              <div class="recipe-img"><img src="/assets/shakshuka.webp" srcset="/assets/shakshuka-480.webp 480w, /assets/shakshuka.webp 720w" sizes="(max-width: 640px) 16.5rem, 21rem" width="720" height="542" alt="Shakshuka with eggs in a cast-iron pan" loading="lazy" decoding="async" draggable="false"></div>
               <div class="recipe-body">
-                <p class="recipe-meta"><span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>20 min</span><span class="tag">Vegetarian</span></p>
+                <p class="recipe-cuisine">Middle Eastern &amp; North African</p>
                 <h3>Skillet Shakshuka</h3>
-                <p class="recipe-uses"><b>Uses 6</b> of your ingredients</p>
+                <p class="recipe-desc">Eggs gently poached in a spiced tomato and pepper sauce.</p>
+                <dl class="recipe-facts">
+                  <div><dt>Time</dt><dd><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>25 min</dd></div>
+                  <div><dt>Difficulty</dt><dd>Easy</dd></div>
+                  <div><dt>Ingredients</dt><dd>10</dd></div>
+                </dl>
+                <ul class="recipe-tags" aria-label="Dietary tags"><li class="tag">Vegetarian</li><li class="tag">Gluten-free</li></ul>
               </div>
               <button class="heart-btn" type="button" aria-pressed="false" aria-label="Save Skillet Shakshuka"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button>
             </li>
             <li class="recipe-card">
-              <div class="recipe-img"><img src="/assets/avocado-toast.webp" width="720" height="542" alt="Smashed avocado toast with cherry tomatoes and a poached egg" loading="lazy" draggable="false"></div>
+              <div class="recipe-img"><img src="/assets/avocado-toast.webp" srcset="/assets/avocado-toast-480.webp 480w, /assets/avocado-toast.webp 720w" sizes="(max-width: 640px) 16.5rem, 21rem" width="720" height="542" alt="Smashed avocado toast with cherry tomatoes and a poached egg" loading="lazy" decoding="async" draggable="false"></div>
               <div class="recipe-body">
-                <p class="recipe-meta"><span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>10 min</span><span class="tag">Quick</span></p>
+                <p class="recipe-cuisine">American</p>
                 <h3>Smashed Avocado Toast</h3>
-                <p class="recipe-uses"><b>Uses 5</b> of your ingredients</p>
+                <p class="recipe-desc">Creamy avocado, cherry tomatoes and a soft egg on sourdough.</p>
+                <dl class="recipe-facts">
+                  <div><dt>Time</dt><dd><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>10 min</dd></div>
+                  <div><dt>Difficulty</dt><dd>Easy</dd></div>
+                  <div><dt>Ingredients</dt><dd>7</dd></div>
+                </dl>
+                <ul class="recipe-tags" aria-label="Dietary tags"><li class="tag">Vegetarian</li></ul>
               </div>
               <button class="heart-btn" type="button" aria-pressed="false" aria-label="Save Smashed Avocado Toast"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button>
             </li>
             <li class="recipe-card">
-              <div class="recipe-img"><img src="/assets/stirfry.webp" width="720" height="542" alt="Vegetable stir-fry with broccoli and peppers over rice" loading="lazy" draggable="false"></div>
+              <div class="recipe-img"><img src="/assets/stirfry.webp" srcset="/assets/stirfry-480.webp 480w, /assets/stirfry.webp 720w" sizes="(max-width: 640px) 16.5rem, 21rem" width="720" height="542" alt="Vegetable stir-fry with broccoli and peppers over rice" loading="lazy" decoding="async" draggable="false"></div>
               <div class="recipe-body">
-                <p class="recipe-meta"><span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>15 min</span><span class="tag">Vegan</span></p>
+                <p class="recipe-cuisine">East Asian</p>
                 <h3>Garden Veggie Stir-Fry</h3>
-                <p class="recipe-uses"><b>Uses 8</b> of your ingredients</p>
+                <p class="recipe-desc">Crisp vegetables tossed in a glossy ginger-garlic sauce.</p>
+                <dl class="recipe-facts">
+                  <div><dt>Time</dt><dd><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>20 min</dd></div>
+                  <div><dt>Difficulty</dt><dd>Easy</dd></div>
+                  <div><dt>Ingredients</dt><dd>11</dd></div>
+                </dl>
+                <ul class="recipe-tags" aria-label="Dietary tags"><li class="tag">Vegan</li></ul>
               </div>
               <button class="heart-btn" type="button" aria-pressed="false" aria-label="Save Garden Veggie Stir-Fry"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button>
             </li>
             <li class="recipe-card">
-              <div class="recipe-img"><img src="/assets/pasta.webp" width="720" height="542" alt="Rigatoni in tomato sauce with basil and parmesan" loading="lazy" draggable="false"></div>
+              <div class="recipe-img"><img src="/assets/pasta.webp" srcset="/assets/pasta-480.webp 480w, /assets/pasta.webp 720w" sizes="(max-width: 640px) 16.5rem, 21rem" width="720" height="542" alt="Rigatoni in tomato sauce with basil and parmesan" loading="lazy" decoding="async" draggable="false"></div>
               <div class="recipe-body">
-                <p class="recipe-meta"><span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>25 min</span><span class="tag">Family favorite</span></p>
+                <p class="recipe-cuisine">European</p>
                 <h3>Tomato Basil Rigatoni</h3>
-                <p class="recipe-uses"><b>Uses 6</b> of your ingredients</p>
+                <p class="recipe-desc">A rich tomato sauce, fresh basil and a shower of parmesan.</p>
+                <dl class="recipe-facts">
+                  <div><dt>Time</dt><dd><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>25 min</dd></div>
+                  <div><dt>Difficulty</dt><dd>Easy</dd></div>
+                  <div><dt>Ingredients</dt><dd>8</dd></div>
+                </dl>
+                <ul class="recipe-tags" aria-label="Dietary tags"><li class="tag">Vegetarian</li></ul>
               </div>
               <button class="heart-btn" type="button" aria-pressed="false" aria-label="Save Tomato Basil Rigatoni"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button>
             </li>
             <li class="recipe-card">
-              <div class="recipe-img"><img src="/assets/salmon.webp" width="720" height="542" alt="Lemon herb salmon with sweet potatoes and green beans" loading="lazy" draggable="false"></div>
+              <div class="recipe-img"><img src="/assets/salmon.webp" srcset="/assets/salmon-480.webp 480w, /assets/salmon.webp 720w" sizes="(max-width: 640px) 16.5rem, 21rem" width="720" height="542" alt="Lemon herb salmon with sweet potatoes and green beans" loading="lazy" decoding="async" draggable="false"></div>
               <div class="recipe-body">
-                <p class="recipe-meta"><span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>30 min</span><span class="tag">Gluten-free</span></p>
+                <p class="recipe-cuisine">European</p>
                 <h3>Lemon Herb Salmon</h3>
-                <p class="recipe-uses"><b>Uses 5</b> of your ingredients</p>
+                <p class="recipe-desc">Bright, herby salmon with roasted sweet potatoes and beans.</p>
+                <dl class="recipe-facts">
+                  <div><dt>Time</dt><dd><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>30 min</dd></div>
+                  <div><dt>Difficulty</dt><dd>Medium</dd></div>
+                  <div><dt>Ingredients</dt><dd>9</dd></div>
+                </dl>
+                <ul class="recipe-tags" aria-label="Dietary tags"><li class="tag">Pescatarian</li><li class="tag">Gluten-free</li></ul>
               </div>
               <button class="heart-btn" type="button" aria-pressed="false" aria-label="Save Lemon Herb Salmon"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button>
             </li>
@@ -336,56 +426,132 @@
         </div>
         <p class="visually-hidden" aria-live="polite" data-carousel-status></p>
       </div>
+      <div class="container">
+        <p class="figure-note">Example dishes for illustration. Times, difficulty and ingredient counts are typical, not live app data. Suggestions rotate across African and Caribbean, Middle Eastern and North African, South and Southeast Asian, East Asian, Latin American, European and American cooking.</p>
+      </div>
     </section>
 
-    <!-- ───────── Download ───────── -->
-    <section class="section" id="download" aria-labelledby="download-title">
+    <!-- ───────── Benefits ───────── -->
+    <section class="section" id="benefits" aria-labelledby="benefits-title" data-track-view="benefits">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="kicker">Why Amari</p>
+          <h2 id="benefits-title" class="h2">Good for your week, your wallet and your fridge.</h2>
+        </header>
+        <ul class="benefits">
+          <li class="benefit reveal"><svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg><h3>Save money</h3><p>Cook from what you already bought, and shop only for what’s missing.</p></li>
+          <li class="benefit reveal"><svg class="ico" aria-hidden="true"><use href="#i-recycle"/></svg><h3>Waste less food</h3><p>Use-soon alerts bring up food that won’t last, and suggestions use it first.</p></li>
+          <li class="benefit reveal"><svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg><h3>Discover new meals</h3><p>Eight world cuisine groups, rotated so no single cuisine is the default, following what you like.</p></li>
+          <li class="benefit reveal"><svg class="ico" aria-hidden="true"><use href="#i-steps"/></svg><h3>Cook with confidence</h3><p>Big step-by-step instructions, timers that keep running, and ingredients one tap away.</p></li>
+          <li class="benefit reveal"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg><h3>Save time</h3><p>230 recipes ready in 30 minutes or less, and a whole week planned in one tap.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ───────── Privacy ───────── -->
+    <section class="section section--tint" id="privacy-first" aria-labelledby="privacy-title" data-track-view="privacy">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="kicker">Private by design</p>
+          <h2 id="privacy-title" class="h2">Your kitchen stays yours.</h2>
+        </header>
+        <ul class="privacy-points">
+          <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><h3>On your device first</h3><p>Your kitchen, plans and preferences live on your phone or browser. They sync only if you sign in.</p></li>
+          <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-camera-off"/></svg><h3>Photos never stored</h3><p>Fridge photos are discarded after the food is recognised. Only the food names are kept.</p></li>
+          <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-eye-off"/></svg><h3>No ads, no selling, no tracking</h3><p>Nothing is sold or used for advertising, and in-app analytics are off unless you turn them on.</p></li>
+          <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg><h3>Delete anytime</h3><p>Download your data, or delete your account and everything with it, in one tap.</p></li>
+        </ul>
+        <p class="section-link reveal"><a href="/privacy">Read the Privacy Policy</a></p>
+      </div>
+    </section>
+
+    <!-- ───────── Get started ───────── -->
+    <section class="section" id="get-started" aria-labelledby="start-title" data-track-view="get_started">
       <div class="container">
         <div class="cta reveal">
-          <img class="cta-produce cta-produce--tomato" src="/assets/tomato.webp" width="333" height="360" alt="" loading="lazy">
-          <img class="cta-produce cta-produce--basil" src="/assets/basil.webp" width="320" height="258" alt="" loading="lazy">
+          <img class="cta-produce cta-produce--tomato" src="/assets/tomato-180.webp" width="180" height="195" alt="" loading="lazy" decoding="async">
+          <img class="cta-produce cta-produce--basil" src="/assets/basil-170.webp" width="170" height="137" alt="" loading="lazy" decoding="async">
           <span class="brand-mark brand-mark--lg" aria-hidden="true"><svg><use href="#logo"/></svg></span>
-          <h2 id="download-title" class="h2">Your next meal is already<br class="br-wide"> in your kitchen.</h2>
-          <p>Download Amari and turn tonight’s “there’s nothing to eat” into something delicious.</p>
-          <div class="store-badges store-badges--center">
-            <a class="store-badge store-badge--light" href="#download" aria-label="Download on the App Store (coming soon)">
-              <svg class="store-icon" aria-hidden="true"><use href="#i-apple"/></svg>
-              <span><small>Download on the</small><strong>App Store</strong></span>
-            </a>
-            <a class="store-badge store-badge--outline" href="#download" aria-label="Get it on Google Play (coming soon)">
-              <svg class="store-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#00D7FE" d="M3.6 2.3 13.5 12l-9.9 9.7c-.4-.2-.6-.7-.6-1.2V3.5c0-.5.2-1 .6-1.2Z"/>
-                <path fill="#00F076" d="m16.9 8.6-3.4 3.4-9.9-9.7c.3-.2.8-.2 1.2 0l12.1 6.3Z"/>
-                <path fill="#FFC900" d="M20.5 10.5c.9.5.9 2.5 0 3l-3.6 1.9-3.4-3.4 3.4-3.4 3.6 1.9Z"/>
-                <path fill="#FF3A44" d="M16.9 15.4 4.8 21.7c-.4.2-.9.2-1.2 0l9.9-9.7 3.4 3.4Z"/>
-              </svg>
-              <span><small>Get it on</small><strong>Google Play</strong></span>
-            </a>
+          <h2 id="start-title" class="h2">Every feature, free<br class="br-wide"> for everyone right now.</h2>
+          <p>Including Ask Amari, calories and macros, and weekly autopilot. Scan as often as you shop; fair-use limits keep it free. No account needed to start.</p>
+          <div class="cta-actions">
+            <a class="btn btn-light btn-lg" href="https://app.askamari.us" data-track="get_started_cta">Use Amari free on the web<svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
           </div>
-          <p class="cta-note">Free to download. Available for iPhone and Android.</p>
+          <p class="cta-note"><span class="status status--on-dark">iPhone app in testing</span> Coming to the App Store after testing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── FAQ ───────── -->
+    <section class="section section--tint" id="faq" aria-labelledby="faq-title" data-track-view="faq">
+      <div class="container faq-wrap">
+        <header class="section-head reveal">
+          <p class="kicker">FAQ</p>
+          <h2 id="faq-title" class="h2">Questions, answered.</h2>
+          <p class="section-lede">Something else? Email <a href="mailto:support@askamari.us" data-track="contact_email">support@askamari.us</a>.</p>
+        </header>
+        <div class="faq">
+          <details class="faq-item" data-track-faq>
+            <summary><span>What is Amari?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Amari is an AI kitchen assistant. It starts with what’s already in your fridge and cupboard, shows the meals you can cook tonight, and helps you plan, shop and cook step by step. It’s available as a web app you can install to your home screen; the iPhone app is in testing.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>How does ingredient scanning work?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Take one or more photos of your fridge or cupboard. The photos are resized on your device, sent to an AI model that lists the food it recognises, and then discarded. You review the list, fix anything it got wrong and add what it missed. Scan as often as you shop; fair-use limits keep Amari free.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Does Amari work with pantry items?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Yes. Scan your cupboard as well as your fridge, or add pantry staples by hand. Everything is organised by category in your kitchen, with use-soon reminders for food that won’t last.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Can I specify dietary preferences and allergies?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Yes. Amari covers the 9 major allergens (milk, egg, peanut, tree nuts, wheat, soy, fish, shellfish and sesame), 7 diets (vegetarian, vegan, pescatarian, gluten-free, halal, no pork and no beef) and an avoid list for anything else. Recipes are checked against your rules by fixed logic, and Ask Amari’s answers are checked too. It’s a guide, not a guarantee: always read product labels, especially if you have a severe allergy.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Can I add ingredients manually?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Yes. Search for any ingredient and add it without taking a photo. You can also edit or remove anything after a scan.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Does Amari generate recipes?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Amari suggests dishes from a collection of 435 recipes, each checked for ingredients, steps and safety before it’s added. If the collection doesn’t have the dish you want, Ask Amari can write a new recipe for you with AI. AI can be wrong, so use your judgement and check ingredients yourself.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Is Amari free?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Yes. Every feature, including Ask Amari, calories and macros, and weekly autopilot, is free for everyone right now, with fair-use limits. If paid plans are ever introduced, you’ll be told in the app first, and nothing is charged unless you choose to buy it.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Is my information secure?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>Your kitchen, plans and preferences live on your device first. Fridge photos are never stored, information is encrypted in transit and at rest, there are no ads and no data selling, and you can delete your account in one tap. Read the <a href="/privacy">Privacy Policy</a> for the details.</p></div>
+          </details>
+          <details class="faq-item" data-track-faq>
+            <summary><span>Is there an iPhone app?</span><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div class="faq-answer"><p>The iPhone app is in testing and isn’t available yet. You can use Amari today in your browser at <a href="https://app.askamari.us" data-track="faq_webapp">app.askamari.us</a> and install it to your home screen.</p></div>
+          </details>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <a class="brand" href="#top" aria-label="Amari home">
-        <span class="brand-mark brand-mark--sm" aria-hidden="true"><svg><use href="#logo"/></svg></span>
-        <span class="brand-name">Amari</span>
-      </a>
-      <nav aria-label="Footer">
-        <ul class="footer-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#how-it-works">How It Works</a></li>
-          <li><a href="#recipes">Recipes</a></li>
-          <li><a href="#download">Download</a></li>
-          <li><a href="/terms">Terms</a></li>
-          <li><a href="/privacy">Privacy</a></li>
-        </ul>
-      </nav>
-      <p class="footer-note">© <span data-year>2026</span> Amari. Always check labels if you have a food allergy.</p>
-      <a class="round-btn round-btn--sm" href="#top" aria-label="Back to top"><svg class="ico" aria-hidden="true"><use href="#i-arrow-up"/></svg></a>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#top" aria-label="Amari home">
+          <span class="brand-mark brand-mark--sm" aria-hidden="true"><svg><use href="#logo"/></svg></span>
+          <span class="brand-name">Amari</span>
+        </a>
+        <p>Your AI kitchen assistant. Dinner, decided, from what's already in your kitchen.</p>
+        <a class="btn btn-primary btn-sm" href="https://app.askamari.us" data-track="footer_cta">Try it free</a>
+      </div>
+      <nav class="footer-col" aria-label="Product"><h2>Product</h2><ul><li><a href="#features" data-track="footer_link">Features</a></li><li><a href="#how-it-works" data-track="footer_link">How It Works</a></li><li><a href="#recipes" data-track="footer_link">Recipes</a></li><li><a href="#faq" data-track="footer_link">FAQ</a></li><li><a href="#ask-amari" data-track="footer_link">Ask Amari</a></li></ul></nav>
+      <nav class="footer-col" aria-label="Legal"><h2>Legal</h2><ul>
+        <li><a href="/privacy" data-track="footer_link">Privacy Policy</a></li>
+        <li><a href="/terms" data-track="footer_link">Terms of Use</a></li>
+      </ul></nav>
+      <div class="footer-col"><h2>Contact</h2><ul>
+        <li><a href="/contact" data-track="footer_link">Contact us</a></li>
+        <li><a href="mailto:support@askamari.us" data-track="contact_email">support@askamari.us</a></li>
+      </ul></div>
+      <p class="footer-legal">© <span data-year>2026</span> Amari. Always check labels if you have a food allergy.</p>
     </div>
   </footer>
 </body>
