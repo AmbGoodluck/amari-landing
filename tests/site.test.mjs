@@ -337,3 +337,25 @@ test('sitemap, robots and security headers are correct', () => {
   assert.doesNotMatch(CSP, /unsafe-inline|unsafe-eval/);
   assert.match(HEADERS, /\/static\/\*\n\s+Cache-Control: public, max-age=31536000, immutable/);
 });
+
+test('the main navigation links to Privacy and Terms on every page, marking the current one', async () => {
+  for (const path of PAGES) {
+    const { page } = await open({ viewport: { width: 1280, height: 900 } }, path);
+    for (const href of ['/privacy', '/terms']) {
+      const link = page.locator(`.site-header .nav-links a[href="${href}"]`);
+      assert.equal(await link.count(), 1, `${path}: nav missing ${href}`);
+      assert.ok(await link.isVisible(), `${path}: ${href} not visible in nav`);
+      assert.equal(await link.getAttribute('aria-current'), path === href ? 'page' : null, `${path}: aria-current on ${href}`);
+    }
+    // Legal links appear once in the footer (Legal column), not duplicated under Product.
+    assert.equal(await page.locator('.site-footer a[href="/privacy"]').count(), 1, `${path}: footer privacy duplicated`);
+    await page.close();
+  }
+  // Reachable from the mobile menu too.
+  const { page } = await open({ viewport: { width: 390, height: 844 } });
+  await page.locator('.nav-toggle').click();
+  await page.waitForSelector('#nav-menu.is-open');
+  assert.ok(await page.locator('#nav-menu a[href="/terms"]').isVisible());
+  assert.ok(await page.locator('#nav-menu a[href="/privacy"]').isVisible());
+  await page.close();
+});

@@ -177,10 +177,11 @@ function head(p) {
 </head>`;
 }
 
-/** @param {{ home: boolean }} o */
-function header({ home }) {
+/** @param {{ home: boolean, current?: string }} o */
+function header({ home, current }) {
   const href = (h) => (home || !h.startsWith('#') ? h : `/${h}`);
-  const nav = config.nav.map((l) => `          <li><a href="${escapeHtml(href(l.href))}" data-track="nav_link">${escapeHtml(l.label)}</a></li>`).join('\n');
+  const cur = (h) => (h === current ? ' aria-current="page"' : '');
+  const nav = config.nav.map((l) => `          <li><a href="${escapeHtml(href(l.href))}"${cur(l.href)} data-track="nav_link">${escapeHtml(l.label)}</a></li>`).join('\n');
   const signIn = config.links.signIn
     ? `\n          <a class="btn btn-secondary btn-sm" href="${escapeHtml(config.links.signIn)}" data-track="nav_signin">${escapeHtml(config.cta.signIn)}</a>`
     : '';
@@ -211,7 +212,8 @@ ${nav}
 function footer({ home, current }) {
   const href = (h) => (home || !h.startsWith('#') ? h : `/${h}`);
   const cur = (path) => (current === path ? ' aria-current="page"' : '');
-  const product = [...config.nav, { label: 'Ask Amari', href: '#ask-amari' }]
+  // Section links only: page links (e.g. /privacy) already have their own footer column.
+  const product = [...config.nav.filter((l) => l.href.startsWith('#')), { label: 'Ask Amari', href: '#ask-amari' }]
     .map((l) => `<li><a href="${escapeHtml(href(l.href))}" data-track="footer_link">${escapeHtml(l.label)}</a></li>`).join('');
   const social = config.social.filter((s) => safeHref(s.href))
     .map((s) => `<li><a href="${escapeHtml(s.href)}" rel="noopener me" data-track="footer_social">${escapeHtml(s.label)}</a></li>`).join('');
