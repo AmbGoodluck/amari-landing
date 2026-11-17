@@ -359,3 +359,17 @@ test('the main navigation links to Privacy and Terms on every page, marking the 
   assert.ok(await page.locator('#nav-menu a[href="/privacy"]').isVisible());
   await page.close();
 });
+
+test('the homepage says recipes, goals and preferences sync across devices', async () => {
+  const { page } = await open({ viewport: { width: 1280, height: 900 } });
+  const tile = page.locator('#features .tile', { hasText: 'Sync across devices' });
+  assert.equal(await tile.count(), 1, 'no "Sync across devices" feature');
+  assert.match(await tile.textContent(), /recipes/i);
+  assert.match(await tile.textContent(), /goals/i);
+  assert.match(await tile.textContent(), /preferences/i);
+  const faq = page.locator('.faq-item', { hasText: 'sync across my devices' });
+  assert.equal(await faq.count(), 1, 'no FAQ about syncing');
+  await faq.locator('summary').click();
+  assert.match(await faq.locator('.faq-answer').textContent(), /sign in/i);
+  await page.close();
+});
