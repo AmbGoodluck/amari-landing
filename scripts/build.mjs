@@ -26,7 +26,7 @@ const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 /**
  * @typedef {{ label: string, href: string }} NavLink
  * @typedef {{
- *   brand: { name: string, appName: string, descriptor: string, tagline: string, pitch: string, logo: string },
+ *   brand: { name: string, legalName: string, appName: string, descriptor: string, tagline: string, pitch: string, logo: string },
  *   site: { url: string, language: string, locale: string },
  *   links: { webApp: string, signIn: string, appStore: string, googlePlay: string },
  *   contact: { email: string },
@@ -401,7 +401,7 @@ function homePage() {
     '@graph': [
       {
         '@type': 'Organization', '@id': `${SITE}/#organization`,
-        name: config.brand.name, url: `${SITE}/`,
+        name: config.brand.name, legalName: config.brand.legalName, url: `${SITE}/`,
         logo: abs('/assets/icon-512.png'),
         email: config.contact.email,
         sameAs: config.social.map((s) => s.href).filter(Boolean),

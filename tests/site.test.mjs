@@ -389,3 +389,17 @@ test('/support answers the common questions with the right contact details', asy
   assert.deepEqual(errors, []);
   await page.close();
 });
+
+test('the operator’s legal name, Amadu Studios LLC, replaces its placeholder everywhere', async () => {
+  for (const path of ['/terms', '/privacy']) {
+    const { page } = await open({ viewport: { width: 1280, height: 900 } }, path);
+    const text = await page.locator('main').textContent();
+    assert.doesNotMatch(text, /Legal name of the operator/, `${path}: legal-name placeholder still shown`);
+    assert.match(text, /Amadu Studios LLC/, `${path}: legal name missing`);
+    await page.close();
+  }
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const ld = JSON.parse(html.match(/<script type="application\/ld\+json">(.+?)<\/script>/s)[1]);
+  assert.equal(ld['@graph'].find((n) => n['@type'] === 'Organization').legalName, 'Amadu Studios LLC');
+  assert.match(html, /© <span data-year>\d{4}<\/span> Amadu Studios LLC\./);
+});

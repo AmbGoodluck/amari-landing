@@ -6,7 +6,7 @@ Effective date: November 12, 2026
 
 This policy explains what information Ask Amari collects, how we use it, who we share it with, how long we keep it, and the choices and rights you have. It applies to the Amari app for iPhone (listed on the App Store as "Ask Amari"), the web app at app.askamari.us, and the website at askamari.us (together, "Amari" or "the Service").
 
-"We", "us" and "our" mean [Legal name of the operator], the operator of Amari. "You" means the person using Amari.
+"We", "us" and "our" mean Amadu Studios LLC, the operator of Amari. "You" means the person using Amari.
 
 If you have a question, write to **support@askamari.us**.
 
@@ -264,7 +264,7 @@ We'll update this policy when Amari changes. If a change is significant, we'll t
 
 ## 20. Contact
 
-[Legal name of the operator]
+Amadu Studios LLC
 [Postal address]
 Email: **support@askamari.us**
 

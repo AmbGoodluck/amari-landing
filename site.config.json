@@ -3,6 +3,7 @@
 
   "brand": {
     "name": "Amari",
+    "legalName": "Amadu Studios LLC",
     "appName": "Ask Amari",
     "descriptor": "Your AI Kitchen Assistant",
     "tagline": "Snap. Discover. Cook.",
@@ -48,7 +49,7 @@
 
   "footer": {
     "blurb": "Your AI kitchen assistant. Dinner, decided, from what's already in your kitchen.",
-    "copyrightHolder": "Amari",
+    "copyrightHolder": "Amadu Studios LLC",
     "note": "Always check labels if you have a food allergy."
   },
 

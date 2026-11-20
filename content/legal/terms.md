@@ -4,7 +4,7 @@
 
 Effective date: November 12, 2026
 
-These Terms of Use ("Terms") are an agreement between you and [Legal name of the operator] ("we", "us", "our"), the operator of Amari. They apply to the Amari app for iPhone (listed on the App Store as "Ask Amari"), the web app at app.askamari.us, and the website at askamari.us (together, "Amari" or "the Service").
+These Terms of Use ("Terms") are an agreement between you and Amadu Studios LLC ("we", "us", "our"), the operator of Amari. They apply to the Amari app for iPhone (listed on the App Store as "Ask Amari"), the web app at app.askamari.us, and the website at askamari.us (together, "Amari" or "the Service").
 
 By using Amari, you agree to these Terms and to our [Privacy Policy](https://app.askamari.us/privacy). If you don't agree, please don't use Amari.
 
@@ -135,7 +135,7 @@ If you got the app from Apple's App Store, these additional terms apply, and the
 5. **Product claims.** We, not Apple, are responsible for addressing any claims by you or a third party relating to the app or your possession or use of it, including product liability claims, claims that the app fails to meet legal or regulatory requirements, and claims under consumer protection, privacy or similar laws.
 6. **Intellectual property.** If a third party claims that the app or your possession or use of it infringes their intellectual property rights, we, not Apple, are solely responsible for the investigation, defence, settlement and discharge of that claim.
 7. **Legal compliance.** You confirm that you're not located in a country subject to a US Government embargo or designated as a "terrorist supporting" country, and that you're not on any US Government list of prohibited or restricted parties.
-8. **Developer contact.** Questions, complaints or claims about the app go to us: [Legal name of the operator], [Postal address], support@askamari.us.
+8. **Developer contact.** Questions, complaints or claims about the app go to us: Amadu Studios LLC, [Postal address], support@askamari.us.
 9. **Third-party terms.** You must comply with any applicable third-party terms when using the app, for example your wireless data provider's.
 10. **Third-party beneficiary.** Apple and its subsidiaries are third-party beneficiaries of these Terms, and once you accept them, Apple has the right (and is deemed to have accepted the right) to enforce them against you as a third-party beneficiary.
 
@@ -149,6 +149,6 @@ If you got the app from Apple's App Store, these additional terms apply, and the
 
 ## 19. Contact
 
-[Legal name of the operator]
+Amadu Studios LLC
 [Postal address]
 Email: **support@askamari.us**
