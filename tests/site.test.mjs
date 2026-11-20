@@ -23,7 +23,7 @@ const TYPES = {
   '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.xml': 'application/xml',
   '.webmanifest': 'application/manifest+json', '.txt': 'text/plain',
 };
-const PAGES = ['/', '/terms', '/privacy', '/contact'];
+const PAGES = ['/', '/terms', '/privacy', '/contact', '/support'];
 const WIDTHS = [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920];
 
 let server, base, browser;
@@ -371,5 +371,21 @@ test('the homepage says recipes, goals and preferences sync across devices', asy
   assert.equal(await faq.count(), 1, 'no FAQ about syncing');
   await faq.locator('summary').click();
   assert.match(await faq.locator('.faq-answer').textContent(), /sign in/i);
+  await page.close();
+});
+
+test('/support answers the common questions with the right contact details', async () => {
+  const { page, errors } = await open({ viewport: { width: 1280, height: 900 } }, '/support');
+  assert.equal((await page.locator('h1').textContent()).trim(), 'Support');
+  const text = await page.locator('main').textContent();
+  for (const topic of ['Getting started', 'Scanning', 'Allergies', 'Syncing', 'Reminders', 'Ask Amari', 'fair use', 'Your data', 'Something not working']) {
+    assert.match(text, new RegExp(topic, 'i'), `support page missing: ${topic}`);
+  }
+  assert.ok(await page.locator(`main a[href="mailto:${config.contact.email}"]`).count() >= 1, 'support email link');
+  assert.ok(await page.locator(`main a[href="${config.links.webApp}"]`).count() >= 1, 'web app link');
+  assert.equal(await page.locator('mark.placeholder').count(), 0, 'no unfilled placeholders on the support page');
+  assert.equal(await page.locator('.site-footer a[href="/support"]').count(), 1, 'footer links to support');
+  assert.ok(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8').includes(`${config.site.url}/support`), 'support in sitemap');
+  assert.deepEqual(errors, []);
   await page.close();
 });

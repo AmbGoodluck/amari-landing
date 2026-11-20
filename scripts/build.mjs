@@ -234,6 +234,7 @@ function footer({ home, current }) {
         <li><a href="/terms"${cur('/terms')} data-track="footer_link">Terms of Use</a></li>
       </ul></nav>
       <div class="footer-col"><h2>Contact</h2><ul>
+        <li><a href="/support"${cur('/support')} data-track="footer_link">Support</a></li>
         <li><a href="/contact"${cur('/contact')} data-track="footer_link">Contact us</a></li>
         <li><a href="mailto:${escapeHtml(config.contact.email)}" data-track="contact_email">${escapeHtml(config.contact.email)}</a></li>${social}
       </ul></div>
@@ -343,6 +344,11 @@ const DOCS = [
     stripInline: [/\s*\[Confirm against each provider's current API terms before publishing\.\]/g],
   },
   {
+    source: 'content/pages/support.md', output: 'support.html', path: '/support', kicker: 'Help', toc: true,
+    title: 'Support — Amari',
+    description: 'Help with Amari: getting started, scanning your fridge, allergies and food safety, syncing across devices, reminders, Ask Amari, fair use, and your data.',
+  },
+  {
     source: 'content/pages/contact.md', output: 'contact.html', path: '/contact', kicker: 'Contact', toc: false,
     title: 'Contact — Amari',
     description: 'Get in touch with the Amari team: support, feedback, privacy requests and food-safety information.',
@@ -442,7 +448,7 @@ function notFoundPage() {
 /* ------------------------------------------------------------------ */
 /* Generated metadata files                                            */
 /* ------------------------------------------------------------------ */
-const INDEXABLE = ['/', '/terms', '/privacy', '/contact'];
+const INDEXABLE = ['/', '/support', '/terms', '/privacy', '/contact'];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
